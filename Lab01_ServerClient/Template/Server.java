@@ -74,36 +74,12 @@ public class Server implements Runnable
 
 	private void addThread(Socket socket)
 	{
-		System.out.println("Server got connected to a client");
-		Thread t = new Thread(new ListClientHandler(clientSocket, clientNum));
-		t.start();
+
 	}
 
 	public static void main(String args[])
 	{
 		Server server = null;
 		server = new Server(1222);
-
-		while (true) { // 3.
-			Socket clientSocket = null;
-			try {
-
-				// 2.1 WAIT FOR CLIENT TO TRY TO CONNECT TO SERVER
-				System.out.println("Waiting for client ");
-				clientSocket = serverSocket.accept(); // // 4.
-
-				// 2.2 SPAWN A THREAD TO HANDLE CLIENT REQUEST
-				addThread(clientSocket);
-
-			} catch (IOException e) {
-				System.out.println("Accept failed: 4444");
-				System.exit(-1);
-			}
-
-			// 2.3 GO BACK TO WAITING FOR OTHER CLIENTS
-			// (While the thread that was created handles the connected client's
-			// request)
-
-		}
 	}
 }

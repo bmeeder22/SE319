@@ -17,7 +17,6 @@ public class Client implements Runnable
 	//private ClientThread client = null;
 	private String username;
 	private ChatGUI frame;
-	private Scanner scanner;
 
 	public Client(String ipAddr, String username, int serverPort)
 	{
