@@ -14,7 +14,6 @@ public class Server implements Runnable
 	private Thread mainThread = null;
 	private File file = new File("chat.txt");
 	private PrintWriter writer;
-	private ServerGUI frame;
 	private Thread guiMessageThread;
 
 	public Server(int port)
@@ -40,8 +39,7 @@ public class Server implements Runnable
 
 	public void start()
 	{
-		frame = new ServerGUI();
-		frame.setVisible(true);
+
 		//TODO launch a thread to read for new messages by the server
 	
 	}
@@ -76,13 +74,36 @@ public class Server implements Runnable
 
 	private void addThread(Socket socket)
 	{
-		//TODO add new client
-		
+		System.out.println("Server got connected to a client");
+		Thread t = new Thread(new ListClientHandler(clientSocket, clientNum));
+		t.start();
 	}
 
 	public static void main(String args[])
 	{
 		Server server = null;
 		server = new Server(1222);
+
+		while (true) { // 3.
+			Socket clientSocket = null;
+			try {
+
+				// 2.1 WAIT FOR CLIENT TO TRY TO CONNECT TO SERVER
+				System.out.println("Waiting for client ");
+				clientSocket = serverSocket.accept(); // // 4.
+
+				// 2.2 SPAWN A THREAD TO HANDLE CLIENT REQUEST
+				addThread(clientSocket);
+
+			} catch (IOException e) {
+				System.out.println("Accept failed: 4444");
+				System.exit(-1);
+			}
+
+			// 2.3 GO BACK TO WAITING FOR OTHER CLIENTS
+			// (While the thread that was created handles the connected client's
+			// request)
+
+		}
 	}
 }

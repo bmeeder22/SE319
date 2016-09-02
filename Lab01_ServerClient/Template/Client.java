@@ -17,6 +17,7 @@ public class Client implements Runnable
 	//private ClientThread client = null;
 	private String username;
 	private ChatGUI frame;
+	private Scanner scanner;
 
 	public Client(String ipAddr, String username, int serverPort)
 	{
@@ -29,11 +30,11 @@ public class Client implements Runnable
 			start();
 		} catch (UnknownHostException h)
 		{
-			JOptionPane.showMessageDialog(new JFrame(), "Unknown Host " + h.getMessage());
+			System.out.println(h.getMessage());
 			System.exit(1);
 		} catch (IOException e)
 		{
-			JOptionPane.showMessageDialog(new JFrame(), "IO exception: " + e.getMessage());
+			System.out.println(e.getMessage());
 			System.exit(1);
 		}
 	}
@@ -51,10 +52,8 @@ public class Client implements Runnable
 
 	public void start() throws IOException
 	{
-		frame = new ChatGUI(username);
-		frame.setVisible(true);
-		//TODO 
 		
+
 	}
 
 	public void stop()
