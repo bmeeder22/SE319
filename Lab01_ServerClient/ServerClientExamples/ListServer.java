@@ -8,13 +8,13 @@
 // 2. to show how a thread is created to handle client request
 //
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.Writer;
 
 public class ListServer {
 
@@ -53,16 +53,18 @@ public class ListServer {
 				System.out.println("Accept failed: 4444");
 				System.exit(-1);
 			}
+		}
+	}
 
-			// 2.3 GO BACK TO WAITING FOR OTHER CLIENTS
-			// (While the thread that was created handles the connected client's
-			// request)
-
-		} // end while loop
-
-	} // end of main method
-
-} // end of class MyServer
+	public synchronized void write(String s) {
+		try {
+			Writer file = new BufferedWriter(new FileWriter("chat.txt", true));
+			file.append(s);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
 
 class ListClientHandler implements Runnable {
 	Socket s; // this is socket on the server side that connects to the CLIENT
@@ -90,26 +92,25 @@ class ListClientHandler implements Runnable {
 			out.println("print You get three wishes!");
 			out.flush(); // force the output
 			
-			// 3. KEEP LISTENING AND RESPONDING TO CLIENT REQUESTS
-			int count = 1;
-			while (count <= 3) {
+			while (true) {
 				System.out.println("Server - waiting to read");
 				String s = in.nextLine();
 				handleRequest(s);
-				count++;
 			}
-			out.println("exit done with wishes");
-			out.flush();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		// This handling code dies after doing all the printing
-	} // end of method run()
-	
+	}
+
 	void handleRequest(String s) {
 		System.out.println("server side: " + s);
 	}
 
-} // end of class ClientHandler
+	void sendChatToClients(String message) {
+
+	}
+
+	String decrypt() {return null;}
+
+	String encrupt() {return null;}
+}

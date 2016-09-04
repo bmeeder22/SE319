@@ -3,7 +3,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ListClient {
@@ -17,9 +16,7 @@ public class ListClient {
 		// 1. CONNECT TO THE SERVER
 		try {
 			serverSocket = new Socket(serverHostName, serverPortNumber);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -28,21 +25,24 @@ public class ListClient {
 		sl = new ServerListener(this, serverSocket);
 		new Thread(sl).start();
 
-		PrintWriter out;
+		PrintWriter out = null;
+
 		try {
 			out = new PrintWriter(new BufferedOutputStream(serverSocket.getOutputStream()));
-			
-			// 3. SEND THREE WISHES TO SERVER
-			out.println("wish 1:  one million bucks "); 			
-			out.flush(); // force the output
-			out.println("wish 2: uh oh! ");
-			out.flush(); // force the output
-			out.println("wish 3: get rid of the bucks ");
-			out.flush(); // force the output
-				
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		while(true){
+			Scanner inp = new Scanner(System.in);
+
+			String message = inp.nextLine();
+
+			// 3. SEND THREE WISHES TO SERVER
+			out.println(message);
+			out.flush();
+
+			System.out.println("done");
 		}
 		
 
