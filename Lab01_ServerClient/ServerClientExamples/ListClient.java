@@ -12,13 +12,22 @@ public class ListClient {
 	int serverPortNumber = 4444;
 	ServerListener sl;
 
+	String username;
+
 	ListClient() {
+		Scanner inp = new Scanner(System.in);
+		System.out.print("Enter username: ");
+		username = inp.nextLine();
+
 		// 1. CONNECT TO THE SERVER
 		try {
 			serverSocket = new Socket(serverHostName, serverPortNumber);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Could not connect to server!");
+			System.exit(1);
 		}
+
+		System.out.println("Connected to server");
 
 		// 2. SPAWN A LISTENER FOR THE SERVER. THIS WILL KEEP RUNNING
 		// when a message is received, an appropriate method is called
@@ -33,40 +42,26 @@ public class ListClient {
 			e.printStackTrace();
 		}
 
-		while(true){
-			Scanner inp = new Scanner(System.in);
+		out.println("username: " + username);
+		out.flush();
 
+		while(true){
+			System.out.print("Message: ");
 			String message = inp.nextLine();
 
-			// 3. SEND THREE WISHES TO SERVER
+			message = username + ": " + message;
 			out.println(message);
 			out.flush();
 
-			System.out.println("done");
-		}
-		
-
-
-	}
-
-	public void handleMessage(String cmd, String s) {
-		switch (cmd) {
-		case "print":
-			System.out.println("client side: " + s);
-			break;
-		case "exit":
-			System.exit(-1);
-			break;
-		default:
-			System.out.println("client side: unknown command received:" + cmd);
+			System.out.println("sent!");
 		}
 	}
 
 	public static void main(String[] args) {
 		ListClient lc = new ListClient();
-	} // end of main method
+	}
 
-} // end of ListClient
+}
 
 class ServerListener implements Runnable {
 	ListClient lc;
@@ -83,12 +78,11 @@ class ServerListener implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) { // run forever
-			System.out.println("Client - waiting to read");
-			String cmd = in.next();
+		while (true) {
 			String s = in.nextLine();
-			lc.handleMessage(cmd, s);
+			System.out.print("\b\b\b\b\b\b\b\b\b");
+			System.out.println(s);
+			System.out.print("Message: ");
 		}
-
 	}
 }

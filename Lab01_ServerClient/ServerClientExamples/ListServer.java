@@ -11,6 +11,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -18,35 +19,41 @@ import java.io.Writer;
 
 public class ListServer {
 
-	public static void main(String[] args) throws IOException {
+	ArrayList<ListClientHandler> clients = new ArrayList<>();
 
-		ServerSocket serverSocket = null;  // 1. serversocket
-		int clientNum = 0; // keeps track of how many clients were created
+	ServerSocket serverSocket = null;
+	int clientNum = 0;
 
-		// 1. CREATE A NEW SERVERSOCKET
+	ListServer() {
+		createServerSocket();
+		mainloop();
+	}
+
+	private void createServerSocket() {
 		try {
-			serverSocket = new ServerSocket(4444); // provide MYSERVICE at port 
-													// 4444
+			serverSocket = new ServerSocket(4444);
 			System.out.println(serverSocket);
 		} catch (IOException e) {
 			System.out.println("Could not listen on port: 4444");
 			System.exit(-1);
 		}
+	}
 
-		// 2. LOOP FOREVER - SERVER IS ALWAYS WAITING TO PROVIDE SERVICE!
-		while (true) { // 3.
-			Socket clientSocket = null;
+	private void mainloop() {
+		while (true) {
+			Socket clientSocket;
 			try {
 
-				// 2.1 WAIT FOR CLIENT TO TRY TO CONNECT TO SERVER
 				System.out.println("Waiting for client " + (clientNum + 1)
 						+ " to connect!");
-				clientSocket = serverSocket.accept(); // // 4.
+				clientSocket = serverSocket.accept();
 
-				// 2.2 SPAWN A THREAD TO HANDLE CLIENT REQUEST
 				System.out.println("Server got connected to a client"
 						+ ++clientNum);
-				Thread t = new Thread(new ListClientHandler(clientSocket, clientNum));
+				ListClientHandler newClient = new ListClientHandler(clientSocket, clientNum, this);
+				clients.add(newClient);
+
+				Thread t = new Thread(newClient);
 				t.start();
 
 			} catch (IOException e) {
@@ -56,23 +63,29 @@ public class ListServer {
 		}
 	}
 
-	public synchronized void write(String s) {
-		try {
-			Writer file = new BufferedWriter(new FileWriter("chat.txt", true));
-			file.append(s);
-		} catch(IOException e) {
-			e.printStackTrace();
+	public synchronized void sendChatToOtherClients(String message, int id) {
+		for(ListClientHandler client: clients) {
+			if(client.num != id)
+				client.sendChatToClient(message);
 		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		ListServer server = new ListServer();
 	}
 }
 
 class ListClientHandler implements Runnable {
 	Socket s; // this is socket on the server side that connects to the CLIENT
 	int num; // keeps track of its number just for identifying purposes
+	String username;
+	PrintWriter out;
+	ListServer listServer;
 
-	ListClientHandler(Socket s, int n) {
+	ListClientHandler(Socket s, int n, ListServer listServer) {
 		this.s = s;
 		num = n;
+		this.listServer = listServer;
 	}
 
 	// This is the client handling code
@@ -80,37 +93,49 @@ class ListClientHandler implements Runnable {
 	// after initially sending some stuff to the client
 	public void run() { 
 		Scanner in;
-		PrintWriter out;
 		
 		try {
-			// 1. GET SOCKET IN/OUT STREAMS
+
 			in = new Scanner(new BufferedInputStream(s.getInputStream())); 
 			out = new PrintWriter(new BufferedOutputStream(s.getOutputStream()));
-	
-			// 2. PRINT SOME STUFF TO THE CLIENT
-			out.println("print Hello There");
-			out.println("print You get three wishes!");
-			out.flush(); // force the output
+
+			username = in.nextLine();
+			if(username != null) {
+				System.out.println("Client " + num + " connected to server with username " + username);
+			}
+
+			System.out.println();
 			
 			while (true) {
-				System.out.println("Server - waiting to read");
 				String s = in.nextLine();
 				handleRequest(s);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Client " + num + " with username " + username + " has left the chat");
 		}
 	}
 
-	void handleRequest(String s) {
-		System.out.println("server side: " + s);
+	void handleRequest(String message) {
+		write(message);
+		System.out.println(message);
+		listServer.sendChatToOtherClients(message, num);
 	}
 
-	void sendChatToClients(String message) {
-
+	void sendChatToClient(String message) {
+		out.println(message);
+		out.flush();
 	}
 
 	String decrypt() {return null;}
 
-	String encrupt() {return null;}
+	String encrypt() {return null;}
+
+	public void write(String s) {
+		try {
+			Writer file = new BufferedWriter(new FileWriter("chat.txt", true));
+			file.append(s);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
