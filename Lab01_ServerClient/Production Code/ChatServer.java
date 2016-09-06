@@ -17,13 +17,13 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.Writer;
 
-public class ListServer {
+public class ChatServer {
 
-	ArrayList<ListClientHandler> clients = new ArrayList<>();
+	ArrayList<ChatClientHandler> clients = new ArrayList<>();
 	ServerSocket serverSocket = null;
 	int clientNum = 0;
 
-	ListServer() {
+	ChatServer() {
 		createServerSocket();
 		mainloop();
 	}
@@ -49,7 +49,7 @@ public class ListServer {
 
 				System.out.println("Server got connected to a client"
 						+ ++clientNum);
-				ListClientHandler newClient = new ListClientHandler(clientSocket, clientNum, this);
+				ChatClientHandler newClient = new ChatClientHandler(clientSocket, clientNum, this);
 				clients.add(newClient);
 
 				Thread t = new Thread(newClient);
@@ -63,25 +63,25 @@ public class ListServer {
 	}
 
 	public synchronized void sendChatToOtherClients(String message, int id) {
-		for(ListClientHandler client: clients) {
+		for(ChatClientHandler client: clients) {
 			if(client.num != id)
 				client.sendChatToClient(message);
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
-		ListServer server = new ListServer();
+		ChatServer server = new ChatServer();
 	}
 }
 
-class ListClientHandler implements Runnable {
+class ChatClientHandler implements Runnable {
 	Socket s; // this is socket on the server side that connects to the CLIENT
 	int num; // keeps track of its number just for identifying purposes
 	String username;
 	PrintWriter out;
-	ListServer listServer;
+	ChatServer listServer;
 
-	ListClientHandler(Socket s, int n, ListServer listServer) {
+	ChatClientHandler(Socket s, int n, ChatServer listServer) {
 		this.s = s;
 		num = n;
 		this.listServer = listServer;
