@@ -50,6 +50,7 @@ public class Encryption {
 	}
 
 	public static byte[] encryptFile(File file) {
+		byte[] encryptedFileBytes = new byte[0];
 		try {
 			Path path = Paths.get(file.getAbsolutePath());
 			byte[] fileBytes = Files.readAllBytes(path);
@@ -58,7 +59,12 @@ public class Encryption {
 				System.out.println("file bytes not divisible by 3");
 			}
 
-			byte[] encryptedFileBytes = new byte[0];
+			int everyThree = 0;
+			for (int i = 0; i < fileBytes.length; i++) {
+				
+
+				everyThree = (everyThree + 1) % 3;
+			}
 
 			return encryptedFileBytes;
 		} catch (IOException e) {
@@ -66,6 +72,18 @@ public class Encryption {
 			return null;
 		}
 	}
+
+	private static byte getBit(byte b, int bitNum) {
+		return (b >> bitNum) & 1;
+	}
+
+//	private static byte setBit(byte b, byte bitNum, byte bitValue) {
+//		if (bitValue == 1) {
+//			b = b | (1 << bitNum);
+//		} else if (bitValue == 0) {
+//			b = b & (0 << bitNum);
+//		}
+//	}
 
 	private static byte[] appendBytes(byte[] bytes1, byte[] bytes2) {
 		byte[] result = new byte[bytes1.length + bytes2.length];
@@ -91,6 +109,11 @@ public class Encryption {
 
 		File test = new File("test.txt");
 		encryptFile(test);
+
+		byte one = (byte) 1;
+		byte two = (byte) 2;
+		System.out.println("One: " + getBit(one, 0));
+		System.out.println("Two: " + getBit(two, 1));
 	}
 
 }
