@@ -5,36 +5,21 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ListClient {
+public class ChatClient {
+
+	final String serverHostName = "localhost";
+	final int serverPortNumber = 4444;
 
 	Socket serverSocket;
-	String serverHostName = "localhost";
-	int serverPortNumber = 4444;
-	ServerListener sl;
-
+	ChatServerListener sl;
+	Scanner inp;
 	String username;
+	PrintWriter out;
 
-	ListClient() {
-		Scanner inp = new Scanner(System.in);
-		System.out.print("Enter username: ");
-		username = inp.nextLine();
-
-		// 1. CONNECT TO THE SERVER
-		try {
-			serverSocket = new Socket(serverHostName, serverPortNumber);
-		} catch (Exception e) {
-			System.out.println("Could not connect to server!");
-			System.exit(1);
-		}
-
-		System.out.println("Connected to server");
-
-		// 2. SPAWN A LISTENER FOR THE SERVER. THIS WILL KEEP RUNNING
-		// when a message is received, an appropriate method is called
-		sl = new ServerListener(this, serverSocket);
-		new Thread(sl).start();
-
-		PrintWriter out = null;
+	ChatClient() {
+		getUsername();
+		serverConnect();
+		startChatServerListener();
 
 		try {
 			out = new PrintWriter(new BufferedOutputStream(serverSocket.getOutputStream()));
@@ -45,6 +30,10 @@ public class ListClient {
 		out.println("username: " + username);
 		out.flush();
 
+		mainloop();
+	}
+
+	private void mainloop() {
 		while(true){
 			System.out.print("Message: ");
 			String message = inp.nextLine();
@@ -57,19 +46,41 @@ public class ListClient {
 		}
 	}
 
+	private void serverConnect() {
+		try {
+			serverSocket = new Socket(serverHostName, serverPortNumber);
+		} catch (Exception e) {
+			System.out.println("Could not connect to server!");
+			System.exit(1);
+		}
+
+		System.out.println("Connected to server");
+	}
+
+	private void getUsername() {
+		inp = new Scanner(System.in);
+		System.out.print("Enter username: ");
+		username = inp.nextLine();
+	}
+
+	private void startChatServerListener() {
+		sl = new ChatServerListener(this, serverSocket);
+		new Thread(sl).start();
+	}
+
 	public static void main(String[] args) {
-		ListClient lc = new ListClient();
+		ChatClient client = new ChatClient();
 	}
 
 }
 
-class ServerListener implements Runnable {
-	ListClient lc;
+class ChatServerListener implements Runnable {
+	ChatClient client;
 	Scanner in; // this is used to read which is a blocking call
 
-	ServerListener(ListClient lc, Socket s) {
+	ChatServerListener(ChatClient lc, Socket s) {
 		try {
-			this.lc = lc;
+			this.client = lc;
 			in = new Scanner(new BufferedInputStream(s.getInputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
