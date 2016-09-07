@@ -27,7 +27,7 @@ public class ChatClient {
 			e.printStackTrace();
 		}
 
-		out.println("username: " + username);
+		out.println(username);
 		out.flush();
 
 		mainloop();

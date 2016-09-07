@@ -1,12 +1,3 @@
-// GOALS
-//
-// 1. to show sample Server code
-// Note that the server is running on LOCALHOST (which is THIS computer) and the 
-// port number associated with this server program is 4444.
-// The accept() method just WAITS until some client program tries to access this server
-//
-// 2. to show how a thread is created to handle client request
-//
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -24,7 +15,12 @@ public class ChatServer {
 	int clientNum = 0;
 
 	ChatServer() {
-		createServerSocket();
+        try {
+            Writer file = new BufferedWriter(new FileWriter("chat.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        createServerSocket();
 		mainloop();
 	}
 
@@ -81,10 +77,13 @@ class ChatClientHandler implements Runnable {
 	PrintWriter out;
 	ChatServer listServer;
 
+    boolean isAdmin;
+
 	ChatClientHandler(Socket s, int n, ChatServer listServer) {
 		this.s = s;
 		num = n;
 		this.listServer = listServer;
+        isAdmin = false;
 	}
 
 	// This is the client handling code
@@ -99,8 +98,9 @@ class ChatClientHandler implements Runnable {
 			out = new PrintWriter(new BufferedOutputStream(s.getOutputStream()));
 
 			username = in.nextLine();
-			if(username != null) {
-				System.out.println("Client " + num + " connected to server with username " + username);
+			System.out.println("Client " + num + " connected to server with username " + username);
+			if(username.equals("ADMIN")) {
+				isAdmin = true;
 			}
 
 			System.out.println();
@@ -115,24 +115,78 @@ class ChatClientHandler implements Runnable {
 	}
 
 	void handleRequest(String message) {
+        if(isAdmin && handleAdminMessages(message)) {
+            return;
+        }
+
 		write(message);
 		System.out.println(message);
 		listServer.sendChatToOtherClients(message, num);
 	}
+
+    boolean handleAdminMessages(String message) {
+        if(message.contains("BROADCAST")) {
+            listServer.sendChatToOtherClients("BROADCAST FROM " + message.replace("BROADCAST ", ""), num);
+            return true;
+        }
+        else if(message.equals("ADMIN: LIST MESSAGES")) {
+            BufferedReader br;
+            try {
+                br = new BufferedReader(new FileReader("chat.txt"));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    out.println(line);
+                }
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        else if(message.contains("DELETE LINE")) {
+            int lineNum = Character.getNumericValue(message.charAt(19));
+            deleteLine(lineNum);
+            return true;
+        }
+
+        return false;
+    }
+
+    void deleteLine(int lineNum) {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader("chat.txt"));
+            String output = "";
+            String line;
+            for(int i=1; i<lineNum; i++) {
+                if((line = br.readLine()) != null) {
+                    output += line + '\n';
+                }
+            }
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                output += line + '\n';
+            }
+
+            System.out.println("START OUTPUT: " + output);
+            Writer newFile = new BufferedWriter(new FileWriter("chat.txt"));
+            newFile.write(output);
+            newFile.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	void sendChatToClient(String message) {
 		out.println(message);
 		out.flush();
 	}
 
-	String decrypt() {return null;}
-
-	String encrypt() {return null;}
-
 	public void write(String s) {
 		try {
-			Writer file = new BufferedWriter(new FileWriter("chat.txt", true));
-			file.append(s);
+            Writer file = new BufferedWriter(new FileWriter("chat.txt", true));
+			file.append(s + '\n');
+            file.flush();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
