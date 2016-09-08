@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.xml.bind.DatatypeConverter;
+
 public class Encryption {
 	final private static byte key = (byte) 240; // key: 11110000
 
@@ -89,6 +91,11 @@ public class Encryption {
 			return null;
 		}
 	}
+	
+	public static String encryptFileToString(File file) throws IOException {
+		byte[] bytes = encryptFileToByteArray(file);
+		return DatatypeConverter.printBase64Binary(bytes);
+	}
 
 	public static void decryptFileFromByteArray(byte[] encryptedFileBytes, String pathname) throws FileNotFoundException, IOException {
 		File file = null;
@@ -130,9 +137,14 @@ public class Encryption {
 		// 	System.out.println("Encrypted byte : " + getBitsIntArray(singleByte).toString());
 		// }
 
-		FileOutputStream outStream = new FileOutputStream("test_decrypted.txt");
+		FileOutputStream outStream = new FileOutputStream(pathname);
 		outStream.write(decryptedFileBytes);
 		outStream.close();
+	}
+	
+	public static void decryptFileFromString(String encryptedString, String pathname) throws FileNotFoundException, IOException {
+		byte[] bytes = DatatypeConverter.parseBase64Binary(encryptedString);
+		decryptFileFromByteArray(bytes, pathname);
 	}
 
 	//-----------------------------------------
@@ -226,6 +238,10 @@ public class Encryption {
 		File test = new File("test.txt");
 		byte[] encryptedFileBytes = encryptFileToByteArray(test);
 		decryptFileFromByteArray(encryptedFileBytes, "test_decrypted.txt");
+		
+		String encryptedFileString = encryptFileToString(test);
+		System.out.println("Encrypted File String: " + encryptedFileString);
+		decryptFileFromString(encryptedFileString, "string_test.txt");
 		
 
 		// System.out.println("Encrypted File: " + getBitsIntArray(encryptedFileBytes).toString());
