@@ -16,10 +16,15 @@ public class Encryption {
 	 * @param string
 	 * @return
 	 */
-	public static byte[] encryptString(String string) {
+	public static byte[] encryptStringToBytes(String string) {
 		byte[] stringBytes = string.getBytes();
 		
 		return encryptDecrypt(stringBytes);
+	}
+
+	public static String encryptString(String string) {
+		byte[] encryptedBytes = encryptStringToBytes(string);
+		return DatatypeConverter.printBase64Binary(encryptedBytes);
 	}
 	
 	/**
@@ -27,9 +32,14 @@ public class Encryption {
 	 * @param stringBytes
 	 * @return
 	 */
-	public static String decryptString(byte[] stringBytes) {
+	public static String decryptStringFromBytes(byte[] stringBytes) {
 		byte[] decryptedBytes = encryptDecrypt(stringBytes);
 		return new String(decryptedBytes);
+	}
+
+	public static String decryptStringFromString(String string) {
+		byte[] encryptedBytes = DatatypeConverter.parseBase64Binary(string);
+		return decryptStringFromBytes(encryptedBytes);
 	}
 	
 	/**
@@ -209,9 +219,12 @@ public class Encryption {
 	
 	//TODO: Remove main method - for testing purposes only
 	public static void main(String[] args) throws IOException, FileNotFoundException {
-		// System.out.println("Original string: Hello World");
-		// byte[] encryptedString = encryptString("Hello World");
-		// System.out.println("Decrypted string: " + decryptString(encryptedString));
+		System.out.println("Original string: Hello World");
+		byte[] encryptedBytes = encryptStringToBytes("Hello World");
+		System.out.println("Decrypted string: " + decryptStringFromBytes(encryptedBytes));
+
+		String encryptedString = encryptString("Hello Moon");
+		System.out.println("Decrypted string from string: " + decryptStringFromString(encryptedString));
 
 		// byte one = (byte) 1;
 		// byte two = (byte) 2;
@@ -235,13 +248,13 @@ public class Encryption {
 		// ArrayList<Integer> numbersBitArray = getBitsIntArray(numbersByte);
 		// System.out.println(numbersBitArray.toString());
 
-		File test = new File("test.txt");
-		byte[] encryptedFileBytes = encryptFileToByteArray(test);
-		decryptFileFromByteArray(encryptedFileBytes, "test_decrypted.txt");
+		// File test = new File("test.txt");
+		// byte[] encryptedFileBytes = encryptFileToByteArray(test);
+		// decryptFileFromByteArray(encryptedFileBytes, "test_decrypted.txt");
 		
-		String encryptedFileString = encryptFileToString(test);
-		System.out.println("Encrypted File String: " + encryptedFileString);
-		decryptFileFromString(encryptedFileString, "string_test.txt");
+		// String encryptedFileString = encryptFileToString(test);
+		// System.out.println("Encrypted File String: " + encryptedFileString);
+		// decryptFileFromString(encryptedFileString, "string_test.txt");
 		
 
 		// System.out.println("Encrypted File: " + getBitsIntArray(encryptedFileBytes).toString());
