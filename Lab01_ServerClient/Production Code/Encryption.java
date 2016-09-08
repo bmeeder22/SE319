@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Encryption {
 	final private static byte key = (byte) 240; // key: 11110000
@@ -58,7 +59,7 @@ public class Encryption {
 			ArrayList<Integer> fileBitsIntArray = getBitsIntArray(fileBytes);
 
 			// System.out.println("Bytes in file: " + fileBytes.length);
-			// int bytesAdded = 0;
+			int bytesAdded = 0;
 
 			int bitNum = 7;	//counts down from 7 to 2
 			byte encryptedByte = Byte.parseByte("0"); //creates a byte of all 0s
@@ -89,12 +90,49 @@ public class Encryption {
 		}
 	}
 
-	public static File decryptFileFromByteArray(byte[] encryptedFileBytes) {
+	public static void decryptFileFromByteArray(byte[] encryptedFileBytes, String pathname) throws FileNotFoundException, IOException {
 		File file = null;
+		byte[] decryptedFileBytes = new byte[0];
 
-		//TODO
+		ArrayList<Integer> encryptedBitsIntArray = getBitsIntArray(encryptedFileBytes);
 
-		return file;
+		//reading the array of encrypted bits
+		Iterator<Integer> iter = encryptedBitsIntArray.iterator();
+		ArrayList<Integer> decryptedBitsIntArray = new ArrayList<Integer>();
+		while (iter.hasNext()) {
+			for (int countToSix = 0; countToSix < 6 && iter.hasNext(); countToSix++) { //grab 6 ints
+				decryptedBitsIntArray.add(iter.next());
+			}
+			for (int countToTwo = 0; countToTwo < 2 && iter.hasNext(); countToTwo++) { //ignore 2 ints
+				iter.next();
+			}
+		}
+		
+		//reading the array of decrypted bits
+		iter = decryptedBitsIntArray.iterator();
+		byte nextByte = Byte.parseByte("0");
+		while (iter.hasNext()) {	//
+			int bitNum ;
+			for (bitNum = 7; bitNum >= 0 && iter.hasNext(); bitNum--) {
+				nextByte = setBit(nextByte, bitNum, iter.next());
+			}
+			if (bitNum == -1) { //If 8 bits have been read, add the byte
+				decryptedFileBytes = appendByte(decryptedFileBytes, nextByte);
+			}
+		}
+
+		//TODO: Remove the following block - for testing only
+		// System.out.println("Byte content: " + new String(decryptedFileBytes));
+		// System.out.println("Decrypted Bytes: " + decryptedBitsIntArray.toString() + "\nNumber of bytes: " + decryptedBitsIntArray.size() / 8);
+		// for (byte b : decryptedFileBytes) {
+		// 	byte[] singleByte = new byte[0];
+		// 	singleByte = appendByte(singleByte, b);
+		// 	System.out.println("Encrypted byte : " + getBitsIntArray(singleByte).toString());
+		// }
+
+		FileOutputStream outStream = new FileOutputStream("test_decrypted.txt");
+		outStream.write(decryptedFileBytes);
+		outStream.close();
 	}
 
 	//-----------------------------------------
@@ -111,6 +149,8 @@ public class Encryption {
 			newByte = (byte) (b | (1 << bitNum));
 		} else if (bitValue == 0) {
 			newByte = (byte) (b & ~(1 << bitNum));
+		} else {
+			return b;
 		}
 		return newByte;
 	}
@@ -156,7 +196,7 @@ public class Encryption {
 	}
 	
 	//TODO: Remove main method - for testing purposes only
-	// public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, FileNotFoundException {
 		// System.out.println("Original string: Hello World");
 		// byte[] encryptedString = encryptString("Hello World");
 		// System.out.println("Decrypted string: " + decryptString(encryptedString));
@@ -183,8 +223,10 @@ public class Encryption {
 		// ArrayList<Integer> numbersBitArray = getBitsIntArray(numbersByte);
 		// System.out.println(numbersBitArray.toString());
 
-		// File test = new File("test.txt");
-		// byte[] encryptedFileBytes = encryptFileToByteArray(test);
+		File test = new File("test.txt");
+		byte[] encryptedFileBytes = encryptFileToByteArray(test);
+		decryptFileFromByteArray(encryptedFileBytes, "test_decrypted.txt");
+		
 
 		// System.out.println("Encrypted File: " + getBitsIntArray(encryptedFileBytes).toString());
 	}
