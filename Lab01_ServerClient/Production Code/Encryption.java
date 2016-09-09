@@ -218,13 +218,13 @@ public class Encryption {
 	}
 	
 	//TODO: Remove main method - for testing purposes only
-	public static void main(String[] args) throws IOException, FileNotFoundException {
-		System.out.println("Original string: Hello World");
-		byte[] encryptedBytes = encryptStringToBytes("Hello World");
-		System.out.println("Decrypted string: " + decryptStringFromBytes(encryptedBytes));
+	// public static void main(String[] args) throws IOException, FileNotFoundException {
+	// 	System.out.println("Original string: Hello World");
+	// 	byte[] encryptedBytes = encryptStringToBytes("Hello World");
+	// 	System.out.println("Decrypted string: " + decryptStringFromBytes(encryptedBytes));
 
-		String encryptedString = encryptString("Hello Moon");
-		System.out.println("Decrypted string from string: " + decryptStringFromString(encryptedString));
+	// 	String encryptedString = encryptString("Hello Moon");
+	// 	System.out.println("Decrypted string from string: " + decryptStringFromString(encryptedString));
 
 		// byte one = (byte) 1;
 		// byte two = (byte) 2;
@@ -258,6 +258,6 @@ public class Encryption {
 		
 
 		// System.out.println("Encrypted File: " + getBitsIntArray(encryptedFileBytes).toString());
-	}
+	// }
 
 }

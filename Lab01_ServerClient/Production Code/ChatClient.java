@@ -1,3 +1,4 @@
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class ChatClient {
 			String message = inp.nextLine();
 
 			message = username + ": " + message;
-			out.println(message);
+			out.println(Encryption.encryptString(message));
 			out.flush();
 
 			System.out.println("sent!");
@@ -90,7 +91,7 @@ class ChatServerListener implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			String s = in.nextLine();
+			String s = Encryption.decryptStringFromString(in.nextLine());
 			System.out.print("\b\b\b\b\b\b\b\b\b");
 			System.out.println(s);
 			System.out.print("Message: ");

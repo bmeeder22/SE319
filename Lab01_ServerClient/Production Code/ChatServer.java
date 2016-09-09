@@ -115,6 +115,7 @@ class ChatClientHandler implements Runnable {
 	}
 
 	void handleRequest(String message) {
+		message = Encryption.decryptStringFromString(message);
         if(isAdmin && handleAdminMessages(message)) {
             return;
         }
@@ -178,7 +179,7 @@ class ChatClientHandler implements Runnable {
     }
 
 	void sendChatToClient(String message) {
-		out.println(message);
+		out.println(Encryption.encryptString(message));
 		out.flush();
 	}
 
