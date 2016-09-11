@@ -48,15 +48,9 @@ public class Encryption {
 	 */
 	public static byte[] encryptDecrypt(byte[] bytes) {
 		byte[] alternateBytes = new byte[bytes.length];
-		
-//		System.out.println("key = " + String.format("%8s", Integer.toBinaryString(key & 0xFF)).replace(' ', '0'));
-		
+				
 		for (int i = 0; i < bytes.length; i++) {
 			alternateBytes[i] = (byte) (bytes[i] ^ key); // b[i] XOR key
-			
-//			String bits = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
-//			System.out.println("original: " + bits);			
-//			System.out.println("encrypted: " + String.format("%8s", Integer.toBinaryString(alternateBytes[i] & 0xFF)).replace(' ', '0'));
 		}
 		
 		return alternateBytes;
@@ -69,9 +63,6 @@ public class Encryption {
 			byte[] fileBytes = Files.readAllBytes(path);
 			ArrayList<Integer> fileBitsIntArray = getBitsIntArray(fileBytes);
 
-			// System.out.println("Bytes in file: " + fileBytes.length);
-//			int bytesAdded = 0;
-
 			int bitNum = 7;	//counts down from 7 to 2
 			byte encryptedByte = Byte.parseByte("0"); //creates a byte of all 0s
 			for (int bit : fileBitsIntArray) {
@@ -79,13 +70,6 @@ public class Encryption {
 				
 				if (bitNum == 2) { //add it to encryptedFileBytes
 					encryptedFileBytes = appendByte(encryptedFileBytes, encryptedByte);
-
-					//TODO: Remove the following block - for testing only
-					// bytesAdded++;
-					// byte[] singleByte = new byte[0];
-					// singleByte = appendByte(singleByte, encryptedByte);
-					// System.out.println("Encrypted byte " + bytesAdded + ": " + getBitsIntArray(singleByte).toString());
-					
 					bitNum = 7;
 				} else {
 					bitNum--;
@@ -135,15 +119,6 @@ public class Encryption {
 				decryptedFileBytes = appendByte(decryptedFileBytes, nextByte);
 			}
 		}
-
-		//TODO: Remove the following block - for testing only
-		// System.out.println("Byte content: " + new String(decryptedFileBytes));
-		// System.out.println("Decrypted Bytes: " + decryptedBitsIntArray.toString() + "\nNumber of bytes: " + decryptedBitsIntArray.size() / 8);
-		// for (byte b : decryptedFileBytes) {
-		// 	byte[] singleByte = new byte[0];
-		// 	singleByte = appendByte(singleByte, b);
-		// 	System.out.println("Encrypted byte : " + getBitsIntArray(singleByte).toString());
-		// }
 
 		FileOutputStream outStream = new FileOutputStream(pathname);
 		outStream.write(decryptedFileBytes);
@@ -214,48 +189,4 @@ public class Encryption {
 		
 		return result;
 	}
-	
-	//TODO: Remove main method - for testing purposes only
-	// public static void main(String[] args) throws IOException, FileNotFoundException {
-	// 	System.out.println("Original string: Hello World");
-	// 	byte[] encryptedBytes = encryptStringToBytes("Hello World");
-	// 	System.out.println("Decrypted string: " + decryptStringFromBytes(encryptedBytes));
-
-	// 	String encryptedString = encryptString("Hello Moon");
-	// 	System.out.println("Decrypted string from string: " + decryptStringFromString(encryptedString));
-
-		// byte one = (byte) 1;
-		// byte two = (byte) 2;
-		// System.out.println("One: " + getBit(one, 3) + getBit(one, 2) + getBit(one, 1) + getBit(one, 0));
-		// System.out.println("Two: " + getBit(two, 3) + getBit(two, 2) + getBit(two, 1) + getBit(two, 0));
-
-		// two = setBit(two, 1, 0);
-		// System.out.println("Zero: " + getBit(two, 3) + getBit(two, 2) + getBit(two, 1) + getBit(two, 0));
-		// two = setBit(two, 2, 1);
-		// System.out.println("Four: " + getBit(two, 3) + getBit(two, 2) + getBit(two, 1) + getBit(two, 0));
-		// two = setBit(two, 3, 1);
-		// System.out.println("Twelve: " + getBit(two, 3) + getBit(two, 2) + getBit(two, 1) + getBit(two, 0));
-		// two = setBit(two, 2, 0);
-		// System.out.println("Eight: " + getBit(two, 3) + getBit(two, 2) + getBit(two, 1) + getBit(two, 0));
-		
-		// byte[] numbersByte = new byte[0];
-		// numbersByte = appendByte(numbersByte, Byte.parseByte("1"));
-		// numbersByte = appendByte(numbersByte, Byte.parseByte("3"));
-		// numbersByte = appendByte(numbersByte, Byte.parseByte("15"));
-		// numbersByte = appendByte(numbersByte, Byte.parseByte("-128"));
-		// ArrayList<Integer> numbersBitArray = getBitsIntArray(numbersByte);
-		// System.out.println(numbersBitArray.toString());
-
-		// File test = new File("test.txt");
-		// byte[] encryptedFileBytes = encryptFileToByteArray(test);
-		// decryptFileFromByteArray(encryptedFileBytes, "test_decrypted.txt");
-		
-		// String encryptedFileString = encryptFileToString(test);
-		// System.out.println("Encrypted File String: " + encryptedFileString);
-		// decryptFileFromString(encryptedFileString, "string_test.txt");
-		
-
-		// System.out.println("Encrypted File: " + getBitsIntArray(encryptedFileBytes).toString());
-	// }
-
 }
