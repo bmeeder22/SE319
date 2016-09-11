@@ -3,9 +3,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.Writer;
 
 public class ChatServer {
 
@@ -46,9 +43,9 @@ public class ChatServer {
 						+ ++clientNum);
 				ChatClientHandler newClient = new ChatClientHandler(clientSocket, clientNum, this);
 				clients.add(newClient);
-
-				Thread t = new Thread(newClient);
-				t.start();
+				
+				Thread chat = new Thread(newClient);
+				chat.start();
 
 			} catch (IOException e) {
 				System.out.println("Accept failed: 4444");
@@ -57,10 +54,18 @@ public class ChatServer {
 		}
 	}
 
-	public synchronized void sendChatToOtherClients(String message, int id) {
+	public synchronized void sendChatToOtherClients(String message, int id) throws IOException {
 		for(ChatClientHandler client: clients) {
 			if(client.num != id)
 				client.sendChatToClient(message);
+		}
+	}
+	
+	public synchronized void sendFileToOtherClients(Message message, int id) throws IOException {
+		for (ChatClientHandler client: clients) {
+			if (client.num != id) {
+				client.sendFileToClient(message);
+			}
 		}
 	}
 
@@ -73,8 +78,10 @@ class ChatClientHandler implements Runnable {
 	Socket s; // this is socket on the server side that connects to the CLIENT
 	int num; // keeps track of its number just for identifying purposes
 	String username;
-	PrintWriter out;
+//	PrintWriter out;
 	ChatServer listServer;
+	ObjectInputStream objectIn;
+	ObjectOutputStream out;
 
     boolean isAdmin;
 
@@ -88,15 +95,13 @@ class ChatClientHandler implements Runnable {
 	// This is the client handling code
 	// This keeps running handling client requests 
 	// after initially sending some stuff to the client
-	public void run() { 
-		Scanner in;
-		
+	public void run() {
 		try {
+			
+			out = new ObjectOutputStream(s.getOutputStream());
+			objectIn = new ObjectInputStream(s.getInputStream());
 
-			in = new Scanner(new BufferedInputStream(s.getInputStream())); 
-			out = new PrintWriter(new BufferedOutputStream(s.getOutputStream()));
-
-			username = in.nextLine();
+			username = ((Message) objectIn.readObject()).getData();
 			System.out.println("Client " + num + " connected to server with username " + username);
 			if(username.equals("admin")) {
 				isAdmin = true;
@@ -105,15 +110,24 @@ class ChatClientHandler implements Runnable {
 			System.out.println();
 			
 			while (true) {
-				String s = in.nextLine();
-				handleRequest(s);
+				Message m = (Message) objectIn.readObject();
+				
+				if (!m.isFile()) {
+					String s = m.getData();
+					handleRequest(s);					
+				} else {
+					handleFileRequest(m);
+				}
+				
 			}
 		} catch (IOException e) {
 			System.out.println("Client " + num + " with username " + username + " has left the chat");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
-	void handleRequest(String message) {
+	void handleRequest(String message) throws IOException {
 		message = Encryption.decryptStringFromString(message);
         if(isAdmin && handleAdminMessages(message)) {
             return;
@@ -124,7 +138,7 @@ class ChatClientHandler implements Runnable {
 		listServer.sendChatToOtherClients(message, num);
 	}
 
-    boolean handleAdminMessages(String message) {
+    boolean handleAdminMessages(String message) throws IOException {
         if(message.contains("BROADCAST")) {
             listServer.sendChatToOtherClients("BROADCAST FROM " + message.replace("BROADCAST ", ""), num);
             return true;
@@ -135,7 +149,7 @@ class ChatClientHandler implements Runnable {
                 br = new BufferedReader(new FileReader("chat.txt"));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    out.println(Encryption.encryptString(line));
+                    out.writeObject(new Message(Encryption.encryptString(line), username));
                 }
                 out.flush();
             } catch (IOException e) {
@@ -177,8 +191,8 @@ class ChatClientHandler implements Runnable {
         }
     }
 
-	void sendChatToClient(String message) {
-		out.println(Encryption.encryptString(message));
+	void sendChatToClient(String message) throws IOException {
+		out.writeObject(new Message(Encryption.encryptString(message), username));
 		out.flush();
 	}
 
@@ -188,6 +202,27 @@ class ChatClientHandler implements Runnable {
 			file.append(s + '\n');
             file.flush();
 		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	void handleFileRequest(Message message) {
+		System.out.println("Encrypted file recieved from " + username + ": " + message.getPathname());
+		try {
+			listServer.sendFileToOtherClients(message, num);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	void sendFileToClient(Message message) {
+		try {
+			out.writeObject(message);
+			out.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

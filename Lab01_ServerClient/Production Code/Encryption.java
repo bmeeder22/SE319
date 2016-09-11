@@ -70,7 +70,7 @@ public class Encryption {
 			ArrayList<Integer> fileBitsIntArray = getBitsIntArray(fileBytes);
 
 			// System.out.println("Bytes in file: " + fileBytes.length);
-			int bytesAdded = 0;
+//			int bytesAdded = 0;
 
 			int bitNum = 7;	//counts down from 7 to 2
 			byte encryptedByte = Byte.parseByte("0"); //creates a byte of all 0s
@@ -107,7 +107,6 @@ public class Encryption {
 	}
 
 	public static void decryptFileFromByteArray(byte[] encryptedFileBytes, String pathname) throws FileNotFoundException, IOException {
-		File file = null;
 		byte[] decryptedFileBytes = new byte[0];
 
 		ArrayList<Integer> encryptedBitsIntArray = getBitsIntArray(encryptedFileBytes);

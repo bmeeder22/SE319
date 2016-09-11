@@ -1,7 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -17,9 +19,8 @@ public class ChatClient {
 	ChatServerListener sl;
 	Scanner inp;
 	String username;
-	PrintWriter out;
-	ObjectInputStream inStream;
-	ObjectOutputStream outStream;
+	ObjectInputStream objectIn;
+	ObjectOutputStream out;
 
 	ChatClient() {
 		getUsername();
@@ -27,19 +28,19 @@ public class ChatClient {
 		startChatServerListener();
 
 		try {
-			out = new PrintWriter(new BufferedOutputStream(serverSocket.getOutputStream()));
+//			out = new PrintWriter(new BufferedOutputStream(serverSocket.getOutputStream()));
+			out = new ObjectOutputStream(serverSocket.getOutputStream());
+			out.writeObject(new Message(username, username));
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		out.println(username);
-		out.flush();
 
 		mainloop();
 	}
 
 	private void mainloop() {
-		while(true){
+		while (true) {
 			if (username.equals("admin")) { //ADMIN MENU
 				System.out.println("\"BROADCAST\": Broadcast message to all clients\n\"LIST MESSAGES\": List messages so far (from chat.txt)\n" +
 						"\"DELETE LINE\": Delete a selected message (from chat.txt) - give a message number");
@@ -47,8 +48,13 @@ public class ChatClient {
 					String message = inp.nextLine();					
 					
 					message = username + ": " + message;
-					out.println(Encryption.encryptString(message));
-					out.flush();
+					try {
+						out.writeObject(new Message(Encryption.encryptString(message), username));
+						out.flush();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					break;
 				}
@@ -61,15 +67,30 @@ public class ChatClient {
 						String message = inp.nextLine();					
 						
 						message = username + ": " + message;
-						out.println(Encryption.encryptString(message));
-						out.flush();
+						try {
+							out.writeObject(new Message(Encryption.encryptString(message), username));
+							out.flush();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 						break;
 					} else if (response.equals("2")) { //Send an image file
 						System.out.print("File pathname: ");
 						String pathname = inp.nextLine();
 						
-						//TODO: read and send the file
+						File file = new File(pathname);
+						String encryptedFileData = "";
+						try {
+							encryptedFileData = Encryption.encryptFileToString(file);
+							Message encryptedFile = new Message(encryptedFileData, username, pathname);
+							out.writeObject(encryptedFile);
+							out.flush();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
 						break;
 					}
 				}
@@ -109,23 +130,38 @@ public class ChatClient {
 
 class ChatServerListener implements Runnable {
 	ChatClient client;
-	Scanner in; // this is used to read which is a blocking call
+	ObjectInputStream in; // this is used to read which is a blocking call
+	Socket socket;
+//	Scanner inp;
 
 	ChatServerListener(ChatClient lc, Socket s) {
-		try {
-			this.client = lc;
-			in = new Scanner(new BufferedInputStream(s.getInputStream()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.client = lc;
+		this.socket = s;
+//		inp = userInput;
 	}
 
 	@Override
 	public void run() {
-		while (true) {
-			String s = Encryption.decryptStringFromString(in.nextLine());
-			System.out.print("\b\b\b\b\b\b\b\b\b");
-			System.out.println(s);
+		try {
+			in = new ObjectInputStream(socket.getInputStream());
+			while (true) {
+				Message m;
+				m = (Message) in.readObject();
+				if (!m.isFile()) {
+					String s = Encryption.decryptStringFromString(m.getData());
+					System.out.print("\b\b\b\b\b\b\b\b\b");
+					System.out.println(s);				
+				} else {
+					System.out.println("File recieved from " + m.getUsername() + ": " + m.getPathname() + ".");
+//					System.out.println("Enter the path you would like to save this file to: ");
+//					String newpath = "";
+//					String newPathname = client.inp.nextLine();
+					Encryption.decryptFileFromString(m.getData(), m.getPathname());
+					System.out.println("File saved!");
+				}
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
