@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ChatServer {
 
@@ -209,6 +208,7 @@ class ChatClientHandler implements Runnable {
 	void handleFileRequest(Message message) {
 		System.out.println("Encrypted file recieved from " + username + ": " + message.getPathname());
 		try {
+			Encryption.decryptFileFromString(message.getData(), "chat_images/" + message.getPathname());
 			listServer.sendFileToOtherClients(message, num);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
