@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -99,7 +98,7 @@ class ChatClientHandler implements Runnable {
 
 			username = in.nextLine();
 			System.out.println("Client " + num + " connected to server with username " + username);
-			if(username.equals("ADMIN")) {
+			if(username.equals("admin")) {
 				isAdmin = true;
 			}
 
@@ -130,13 +129,13 @@ class ChatClientHandler implements Runnable {
             listServer.sendChatToOtherClients("BROADCAST FROM " + message.replace("BROADCAST ", ""), num);
             return true;
         }
-        else if(message.equals("ADMIN: LIST MESSAGES")) {
+        else if(message.contains("LIST MESSAGES")) {
             BufferedReader br;
             try {
                 br = new BufferedReader(new FileReader("chat.txt"));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    out.println(line);
+                    out.println(Encryption.encryptString(line));
                 }
                 out.flush();
             } catch (IOException e) {
