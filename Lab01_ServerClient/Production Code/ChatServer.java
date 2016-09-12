@@ -77,7 +77,6 @@ class ChatClientHandler implements Runnable {
 	Socket s; // this is socket on the server side that connects to the CLIENT
 	int num; // keeps track of its number just for identifying purposes
 	String username;
-//	PrintWriter out;
 	ChatServer listServer;
 	ObjectInputStream objectIn;
 	ObjectOutputStream out;
@@ -211,7 +210,6 @@ class ChatClientHandler implements Runnable {
 			Encryption.decryptFileFromString(message.getData(), "chat_images/" + message.getPathname());
 			listServer.sendFileToOtherClients(message, num);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -222,7 +220,6 @@ class ChatClientHandler implements Runnable {
 			out.flush();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
