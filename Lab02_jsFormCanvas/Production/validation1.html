@@ -1,9 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Excerise 2.1 - Form validation</title>
+	<title>Validation Form</title>
+	<script src="validation1.js"></script>
 </head>
 <body>
-
+<div id="FormGroup">
+	<div id="div1">
+		<label>First Name</label>
+		<input type="text" name="FirstName" id="FirstName">
+	</div>
+	<div id="div2">
+		<label>Last Name</label>
+		<input type="text" name="LastName" id="LastName">
+	</div>
+	<div id="div3">
+		<select id="Gender">
+		  <option value="Male">Male</option>
+		  <option value="Female">Female</option>
+		</select>
+	</div>
+	<div id="div4">
+		<select id="State">
+		  <option value="California">California</option>
+		  <option value="Florida">Florida</option>
+		  <option value="New York">New York</option>
+		  <option value="Hawaii">Hawaii</option>
+		  <option value="Washington">Washington</option>
+		  <option value="Colorado">Colorado</option>
+		  <option value="Virginia">Virginia</option>
+		  <option value="Iowa">Iowa</option>
+		  <option value="Arizona">Arizona</option>
+		</select>
+	</div>
+</div>
+<button onclick="validate()">Continue</button>
 </body>
 </html>
