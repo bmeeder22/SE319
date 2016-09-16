@@ -9,11 +9,10 @@ window.direction = "right";
 window.running = false;
 
 (function(){
-    window.x += window.xAdd;
-    window.y += window.yAdd;
-
     var canvas = document.getElementById("myCanvas");
     if(canvas != null && window.running == true) {
+        window.x += window.xAdd;
+        window.y += window.yAdd;
         var context = canvas.getContext("2d");
         context.beginPath();
 
@@ -80,6 +79,18 @@ function hanleRight() {
     }
     else if(window.direction == "down") {
         left();
+    }
+}
+
+function toggle() {
+    var button = document.getElementById("startstop");
+    if(window.running) {
+        button.innerHTML = "start";
+        window.running = false;
+    }
+    else{
+        button.innerHTML = "stop";
+        window.running = true;
     }
 }
 
