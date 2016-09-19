@@ -85,19 +85,11 @@ function hanleRight() {
 function toggle() {
     var button = document.getElementById("startstop");
     if(window.running) {
-        button.innerHTML = "start";
+        button.innerHTML = "Start";
         window.running = false;
     }
     else{
-        button.innerHTML = "stop";
+        button.innerHTML = "Stop";
         window.running = true;
     }
-}
-
-function stop() {
-    window.running = false;
-}
-
-function start() {
-    window.running = true;
 }
