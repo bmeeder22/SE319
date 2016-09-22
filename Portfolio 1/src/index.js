@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import Test from './Test';
+import Main from './Test';
 import './index.css';
 
 ReactDOM.render(
-  <Test />,
+  <Main name="Ben"/>,
   document.getElementById('root')
 );
