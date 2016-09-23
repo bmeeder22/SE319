@@ -104,14 +104,18 @@ class Square extends Component {
     }
 
     render() {
+        var SquareStyle = {
+            width: "30px",
+            height: "30px",
+            border: "5px solid black",
+        };
+        var id = "square" + this.props.num;
         return (
-            <button id="test" onClick={this.handleClick}>
+            <span style={SquareStyle} className="square" id={id} onClick={this.handleClick}>
                 {this.state.displayValue}
-            </button>
+            </span>
         );
     }
 }
-
-
 
 export default Main;
