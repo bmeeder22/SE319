@@ -1,5 +1,0 @@
-Ben: hello
-Ben: test
-Ben: this is ben
-ADMIN: Hello ben
-ADMIN: I am admin
