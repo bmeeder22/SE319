@@ -8,16 +8,17 @@ class Main extends Component {
         this.state = {
             values: [0,0,0,0,0,0,0,0,0],
             playerTurn: 1,
-            gameOver: false
+            gameOver: false,
+            winner: null
         };
     }
 
-    checkCatsgame() {
+    checkCatsGame() {
         for(var i = 0; i<9; i++) {
             if(this.state.values[i] === 0)
                 return false;
         }
-        return true;
+        return !this.checkWin();
     }
 
     checkRow(rowNum) {
@@ -56,17 +57,8 @@ class Main extends Component {
     }
 
     checkWin() {
-
-        // console.log("Check row 0: " + this.checkRow(2));
-        // console.log("Check col 0: " + this.checkCol(0));
-        // console.log("Check left diagonal: " + this.checkLeftDiagonal());
-        // console.log("Check right diagonal: " + this.checkRightDiagonal());
-        console.log("Check cat game: " + this.checkCatsgame());
-
         for (var i = 0; i < 3; i ++) {
-            if (this.checkRow(i)) {
-                return true;
-            } else if (this.checkCol(i)) {
+            if (this.checkRow(i) || this.checkCol(i)) {
                 return true;
             }
         }
@@ -85,11 +77,12 @@ class Main extends Component {
         var newState = this.state.values;
         if(this.state.playerTurn === 1) {
             newState[number-1] = 1;
-            this.setState({values: newState, playerTurn: 2, gameOver: this.checkWin()});
+            var gameWon = this.checkWin;
+            this.setState({values: newState, playerTurn: 2, gameOver: this.checkWin() || this.checkCatsGame()});
         }
         else {
             newState[number-1] = 2;
-            this.setState({values: newState, playerTurn: 1, gameOver: this.checkWin()});
+            this.setState({values: newState, playerTurn: 1, gameOver: this.checkWin() || this.checkCatsGame()});
         }
     }
 
@@ -117,6 +110,33 @@ class Main extends Component {
                   </div>
               </div>
             );
+        } else if(this.checkCatsGame()) {
+            return (
+                <div id="board">
+                <div id="title">
+                    <h1>Tic Tac Toe</h1>
+                </div>
+                  <div id="row1">
+                      <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="row2">
+                      <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="row3">
+                      <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="gameover">
+                    <h2>Cat's Game</h2>
+                    <p>It's a tie!</p>
+                  </div>
+              </div>
+              );
         } else {
             if (this.state.playerTurn === 1) {
                 return(
