@@ -21,8 +21,8 @@ class Main extends Component {
 
     checkRow(rowNum) {
         var num = this.state.values[rowNum];
-        for(var i = rowNum; i<rowNum+3; i++) {
-            if(this.state.values[i] != num) return false;
+        for(var i = rowNum * 3; i<(rowNum * 3) + 3; i++) {
+            if(this.state.values[i] !== num || this.state.values[i] === 0) return false;
         }
         return true;
     }
@@ -30,14 +30,49 @@ class Main extends Component {
     checkCol(colNum) {
         var num = this.state.values[colNum];
         for(var i = colNum; i<9; i+=3) {
-            if(this.state.values[i] != num) return false;
+            if(this.state.values[i] !== num || this.state.values[i] === 0) return false;
         }
+        console.log("Col " + colNum + " = true");
+        return true;
+    }
+
+    checkLeftDiagonal() {
+        var num = this.state.values[0];
+        for(var i = 0; i<9; i+=4) {
+            if(this.state.values[i] !== num || this.state.values[i] === 0) return false;
+        }
+        console.log("Left diagonal true");
+        return true;
+    }
+
+    checkRightDiagonal() {
+        var num = this.state.values[2];
+        for(var i = 2; i<9; i+=2) {
+            if(this.state.values[i] !== num || this.state.values[i] === 0) return false;
+        }
+        console.log("Right diagonal true");
         return true;
     }
 
     checkWin() {
 
-        console.log(this.checkRow(3));
+        // console.log("Check row 0: " + this.checkRow(2));
+        // console.log("Check col 0: " + this.checkCol(0));
+        // console.log("Check left diagonal: " + this.checkLeftDiagonal());
+        // console.log("Check right diagonal: " + this.checkRightDiagonal());
+        console.log("Check cat game: " + this.checkCatsgame());
+
+        for (var i = 0; i < 3; i ++) {
+            if (this.checkRow(i)) {
+                return true;
+            } else if (this.checkCol(i)) {
+                return true;
+            }
+        }
+
+        if (this.checkLeftDiagonal() || this.checkRightDiagonal()) {
+            return true;
+        }
 
         // if (this.checkRow(0) || this.checkRow(3) || this.checkRow(6)) console.log("1WIN!");
         //
@@ -47,14 +82,19 @@ class Main extends Component {
     }
 
     handleButtonPressed(number) {
+        if (this.checkWin()) {
+            console.log("Game already won. You cannot move.");
+            return;
+        }
+
         var newState = this.state.values;
         if(this.state.playerTurn === 1) {
             newState[number-1] = 1;
-            this.setState({values: newState, playerTurn: 2}, this.checkWin(number));
+            this.setState({values: newState, playerTurn: 2}, this.checkWin());
         }
         else {
             newState[number-1] = 2;
-            this.setState({values: newState, playerTurn: 1}, this.checkWin(number));
+            this.setState({values: newState, playerTurn: 1}, this.checkWin());
         }
     }
 
