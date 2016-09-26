@@ -12,10 +12,6 @@ class Main extends Component {
         };
     }
 
-    getValue(number) {
-        return this.state.values[number];
-    }
-
     checkCatsGame() {
         for(var i = 0; i<9; i++) {
             if(this.state.values[i] === 0)
