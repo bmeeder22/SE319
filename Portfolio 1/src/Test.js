@@ -12,6 +12,10 @@ class Main extends Component {
         };
     }
 
+    getValue(number) {
+        return this.state.values[number];
+    }
+
     checkCatsGame() {
         for(var i = 0; i<9; i++) {
             if(this.state.values[i] === 0)
@@ -21,8 +25,8 @@ class Main extends Component {
     }
 
     checkRow(rowNum) {
-        var num = this.state.values[rowNum];
-        for(var i = rowNum * 3; i<(rowNum * 3) + 3; i++) {
+        var num = this.state.values[rowNum * 3];
+        for(var i = rowNum * 3; i < (rowNum * 3) + 3; i++) {
             if(this.state.values[i] !== num || this.state.values[i] === 0) return false;
         }
         return true;
@@ -87,124 +91,65 @@ class Main extends Component {
 
     resetGame() {
       console.log("Resetting game.");
-      // this.setState({
-      //   values: [0,0,0,0,0,0,0,0,0],
-      //       playerTurn: 1,
-      //       gameOver: false
-      // });
+      this.setState({
+        values: [0,0,0,0,0,0,0,0,0],
+            playerTurn: 1,
+            gameOver: false
+      });
     }
 
     render() {
+        var gameMessageHeader = "";
+        var gameMessageSubtitle = "";
         if (!this.state.gameOver) {
-            return (
-              <div id="board">
-                <div id="title">
-                    <h1>Tic Tac Toe</h1>
-                </div>
-                  <div id="row1">
-                      <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row2">
-                      <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row3">
-                      <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="reset">
-                      <ResetButton turn={this.state.playerTurn} click={this.resetGame.bind(this)}/>
-                  </div>
-              </div>
-            );
-        } else if(this.checkCatsGame()) {
-            return (
-                <div id="board">
-                <div id="title">
-                    <h1>Tic Tac Toe</h1>
-                </div>
-                  <div id="row1">
-                      <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row2">
-                      <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row3">
-                      <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="gameover">
-                    <h2>Cat's Game</h2>
-                    <p>It's a tie!</p>
-                  </div>
-              </div>
-              );
-        } else {
             if (this.state.playerTurn === 1) {
-                return(
-                <div id="board">
-                <div id="title">
-                    <h1>Tic Tac Toe</h1>
-                </div>
-                  <div id="row1">
-                      <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row2">
-                      <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row3">
-                      <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="gameover">
-                    <h2>Game Over</h2>
-                    <p>Player O is the Winner!</p>
-                  </div>
-              </div>
-              );
+              gameMessageSubtitle = "Player X's Turn";
             } else {
-                return(
-                <div id="board">
-                <div id="title">
-                    <h1>Tic Tac Toe</h1>
-                </div>
-                  <div id="row1">
-                      <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row2">
-                      <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="row3">
-                      <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                      <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="gameover">
-                    <h2>Game Over</h2>
-                    <p>Player X is the Winner!</p>
-                  </div>
-              </div>
-              );
+              gameMessageSubtitle = "Player O's Turn";
+            }
+        } else if(this.checkCatsGame()) {
+            gameMessageHeader = "Cat's Game";
+            gameMessageSubtitle = "It's a tie!";
+        } else {
+            gameMessageHeader = "Game Over";
+
+            if (this.state.playerTurn === 1) {
+                gameMessageSubtitle = "Player O is the winner!";
+
+            } else {
+                gameMessageSubtitle = "Player X is the winner!";
             }
         }
+
+        return (
+                <div id="board">
+                <div id="title">
+                    <h1>Tic Tac Toe</h1>
+                </div>
+                  <div id="row1">
+                      <Square num="1" value={this.state.values[0]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="2" value={this.state.values[1]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="3" value={this.state.values[2]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="row2">
+                      <Square num="4" value={this.state.values[3]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="5" value={this.state.values[4]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="6" value={this.state.values[5]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="row3">
+                      <Square num="7" value={this.state.values[6]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="8" value={this.state.values[7]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                      <Square num="9" value={this.state.values[8]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="gameMessage">
+                    <h2>{gameMessageHeader}</h2>
+                    <p>{gameMessageSubtitle}</p>
+                  </div>
+                  <div id="reset">
+                      <ResetButton click={this.resetGame.bind(this)}/>
+                  </div>
+              </div>
+              );
     }
 }
 
@@ -227,10 +172,19 @@ class Square extends Component {
         else
             this.setState({displayValue: "O"});
 
-        this.props.click(this.props.num);
+        this.props.click(this.props.num); //runs handleButtonPressed method in main
     }
 
     render() {
+      this.state.displayValue = "-";
+      var value = this.props.value;
+      console.log("Number " + this.props.num + ": " + value);
+      if (this.props.value === 1) {
+          this.state.displayValue = "X";
+      } else if (this.props.value === 2) {
+          this.state.displayValue = "O";
+      }
+
         var SquareStyle = {
             width: "30px",
             height: "30px",
@@ -249,16 +203,15 @@ class ResetButton extends Component {
   constructor() {
     super();
     this.state = {
-      // reset: false
     };
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick() {
-    console.log("Reset Button Pressed");
+    this.props.click();
   }
   render() {
     return (
-      <button onClick={this.handleClick}>Reset Game</button>
+      <button className="resetButton" onClick={this.handleClick}>Reset Game</button>
     );
   }
 }
