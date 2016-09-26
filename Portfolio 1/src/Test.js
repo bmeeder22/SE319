@@ -59,23 +59,22 @@ class Main extends Component {
     }
 
     render() {
+        var style = {
+            height: '600px',
+            width: '300px',
+        };
+
         return (
-          <div id="board">
-              <div id="row1">
-                  <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-              </div>
-              <div id="row2">
-                  <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-              </div>
-              <div id="row3">
-                  <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-              </div>
+          <div style={style} id="board">
+              <Square num="1" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="2" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="3" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="4" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="5" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="6" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+              <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
           </div>
         );
     }
@@ -86,14 +85,14 @@ class Square extends Component {
         super();
 
         this.state = {
-            displayValue: "-"
+            displayValue: " "
         };
 
         this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick() {
-        if(this.state.displayValue !== "-") return;
+        if(this.state.displayValue !== " ") return;
 
         if(this.props.turn === 1)
             this.setState({displayValue: "X"});
@@ -105,15 +104,18 @@ class Square extends Component {
 
     render() {
         var SquareStyle = {
-            width: "30px",
-            height: "30px",
-            border: "5px solid black",
+            width: '100px',
+            height: '100px',
+            outline: "1px solid",
+            float: "left",
+            textAlign: "center",
+            lineHeight: "50px",
         };
         var id = "square" + this.props.num;
         return (
-            <span style={SquareStyle} className="square" id={id} onClick={this.handleClick}>
+            <div style={SquareStyle} className="square" id={id} onClick={this.handleClick}>
                 {this.state.displayValue}
-            </span>
+            </div>
         );
     }
 }
