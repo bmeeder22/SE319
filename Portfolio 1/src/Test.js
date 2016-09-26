@@ -8,8 +8,7 @@ class Main extends Component {
         this.state = {
             values: [0,0,0,0,0,0,0,0,0],
             playerTurn: 1,
-            gameOver: false,
-            winner: null
+            gameOver: false
         };
     }
 
@@ -77,13 +76,22 @@ class Main extends Component {
         var newState = this.state.values;
         if(this.state.playerTurn === 1) {
             newState[number-1] = 1;
-            var gameWon = this.checkWin;
-            this.setState({values: newState, playerTurn: 2, gameOver: this.checkWin() || this.checkCatsGame()});
+            var gameWon = this.checkWin();
+            this.setState({values: newState, playerTurn: 2, gameOver: gameWon || this.checkCatsGame()});
         }
         else {
             newState[number-1] = 2;
             this.setState({values: newState, playerTurn: 1, gameOver: this.checkWin() || this.checkCatsGame()});
         }
+    }
+
+    resetGame() {
+      console.log("Resetting game.");
+      // this.setState({
+      //   values: [0,0,0,0,0,0,0,0,0],
+      //       playerTurn: 1,
+      //       gameOver: false
+      // });
     }
 
     render() {
@@ -107,6 +115,9 @@ class Main extends Component {
                       <Square num="7" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                       <Square num="8" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                       <Square num="9" turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
+                  </div>
+                  <div id="reset">
+                      <ResetButton turn={this.state.playerTurn} click={this.resetGame.bind(this)}/>
                   </div>
               </div>
             );
@@ -232,6 +243,24 @@ class Square extends Component {
             </span>
         );
     }
+}
+
+class ResetButton extends Component {
+  constructor() {
+    super();
+    this.state = {
+      // reset: false
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    console.log("Reset Button Pressed");
+  }
+  render() {
+    return (
+      <button onClick={this.handleClick}>Reset Game</button>
+    );
+  }
 }
 
 export default Main;
