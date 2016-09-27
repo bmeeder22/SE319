@@ -56,7 +56,7 @@ class Main extends Component {
     }
 
     checkWin() {
-        for (var i = 0; i < 3; i ++) {
+        for (var i = 0; i < 3; i++) {
             if (this.checkRow(i) || this.checkCol(i)) {
                 return true;
             }
