@@ -49,22 +49,29 @@ function sayColor() { document.write(this.color+"<br>"); }
 
 // TODO: WHAT WILL THE BELOW PRINT IF YOU UNCOMMENT? WHY?
 // TRY IT! Here this will be the WINDOW object
- sayColor();  
+ sayColor();
+//red
+//it is calling the function and is printing out window.color=red
 
 // TODO: WHAT WILL THE BELOW PRINT IF YOU UNCOMMENT? WHY?
 // TRY IT! Here, we o is the object
    o.sayColor = sayColor;
    o.sayColor();
+//blue
+//this now refers to the object
 
 // TODO: WHAT WILL THE BELOW PRINT IF YOU UNCOMMENT? WHY?
 // TRY IT! Here we invoke the returned function using the window object
  o.getColor()();
+//red
+//returns a function that is called in the body so this=window.color=red
 
 // TODO: WHAT WILL THE BELOW PRINT IF YOU UNCOMMENT? WHY?
 // TRY IT! Here too, we invoke the returned function using the window
 // object.
- o.prtColor()(); 
-
+ o.prtColor()();
+//blue
+// that is set before the function exits the object
 
 </script>
 </body>

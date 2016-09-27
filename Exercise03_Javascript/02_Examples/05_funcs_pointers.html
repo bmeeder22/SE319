@@ -25,13 +25,14 @@ var newFact = fact;
 
 // TODO: What do you expect will happen if you uncomment the next line.
 // Try it!
-// document.write("The result of newFact(4) is : " +newFact(4) + "<br>");
-
+ document.write("The result of newFact(4) is : " +newFact(4) + "<br>");
+// Works and has same output as fact becuase newFact = face
 
 // TODO: What do you expect will happen if you uncomment the next line.
 // Try it! Why does this happen?
 //fact = null;
 document.write(newFact(4) + "<br>"); // because fact INSIDE code is null
+// an error as fact is not null
 
 
 
@@ -45,8 +46,8 @@ newFact = factorial;
 factorial = null;
 // TODO: What do you expect will happen if you comment the next line.
 // Try it! Why does this happen?
-// document.write(newFact(4) + "<br>");
-
+ document.write(newFact(4) + "<br>");
+//works because newFact points to the function of factorial
 </script>
 </body>
 </html>

@@ -39,11 +39,12 @@ function add (num1, num2) { return num1 + num2; }
 // ERROR
 // TODO: UNCOMMENT THE NEXT LINE. DOES THIS WORK? WHY?
 //   sub(10,20);
+// No sub is not a function yet because it was declared as a variable
 
 // WAY TWO: FUNCTION EXPRESSIONS
 var sub = function(num1, num2) {
    document.write("<h1> sub  "+ (num1 -  num2) + "</h1><br>");
-}
+};
 
 // TODO: CLICK ON CLICKME button - see how sub indeed works
 // The reason is that this js script is being run BEFORE the
@@ -51,6 +52,7 @@ var sub = function(num1, num2) {
 
 // TODO: UNCOMMENT THE NEXT LINE. DOES THIS WORK? WHY?
    sub(10,20);
+//yes becuase is was declared before the call.
 
 // WAY THREE: NAMED FUNCTION EXPRESSIONS
 // Here we assign mpy to a named function expression f instead

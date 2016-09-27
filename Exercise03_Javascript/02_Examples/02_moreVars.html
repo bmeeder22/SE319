@@ -88,6 +88,30 @@
   // TODO: Play with evaluating different types and values in if
   // statement conditions: For example:
   // x = {"Tom":"Thumb"}, x = [10,20,30], x = function(){}, etc
+    document.write("<br>");
+    if(a == "a") {
+        document.write("a == \'a\'");
+    }
+    else {
+        document.write("a == NOT \'a\'");
+    }
+
+    var a = function() {return 1+1;};
+    var b = function() {return 1+1;};
+  document.write("<br>");
+  if(a == b) {
+      document.write("a == b");
+  }
+  else {
+      document.write("a != b");
+  }
+  document.write("<br>");
+  if(a === b) {
+      document.write("a === b");
+  }
+  else {
+      document.write("a !== b");
+  }
 
 </script>
 </body>

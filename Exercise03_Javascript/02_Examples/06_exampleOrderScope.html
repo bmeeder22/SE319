@@ -28,6 +28,22 @@
 // SCREEN AND IN WHAT ORDER.
 // FIGURE OUT WHAT IS HAPPENING.
 
+//in head: 1
+//script1: value of i before test() run: 2
+//inside test method: s is test called before test declared
+//inside test method: i is undefined
+//inside test method: k is undefined
+//inside test method: i is (a local variable) 5
+//inside test method: before return k is 2
+//script1: value of i after test() run: 2
+//script1: value of j after test() run: 4
+//script2: i is 2
+//inside test method: s is test called after load completed!
+//inside test method: i is undefined
+//inside test method: k is undefined
+//inside test method: i is (a local variable) 5
+//inside test method: before return k is 2
+
 i = 1;   // THIS i IS A GLOBAL VARIABLE
 
 alert("In head: " + i);

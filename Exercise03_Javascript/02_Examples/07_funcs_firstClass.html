@@ -27,6 +27,7 @@ var myFunc = function (anotherFunc, arg) {
 // TODO: IF YOU UNCOMMENT THE BELOW LINES, WHAT WILL IT PRINT?
 // TRY IT!
  myFunc(alert, "hello"); // myFunc calls alert internally!
+//hello
 
 function doOps (operation) { // doOps returns a function!
   if (operation == "add") 
@@ -37,8 +38,7 @@ var someOp = myFunc(doOps, "add");
 // TODO: IF YOU UNCOMMENT THE BELOW LINES, WHAT WILL IT PRINT?
 // TRY IT!
 alert(someOp(100, 11));
-
-
+//111
 
 //
 // NOTICE HOW FUNCTION INC IS DECLARED INSIDE THE ANONYMOUS FUNCTION
@@ -56,9 +56,10 @@ var x = function (num) {
 
 // TODO: IF YOU UNCOMMENT THE BELOW LINES, WHAT WILL IT PRINT?
 // TRY IT!
-// document.write(x(10) + "<br>");
-// document.write(x(20) + "<br>");
-
+ document.write(x(10) + "<br>");
+ document.write(x(20) + "<br>");
+//13
+//23
 </script>
 </body>
 </html>
