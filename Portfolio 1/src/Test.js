@@ -96,7 +96,7 @@ class Main extends Component {
 
     render() {
         var style = {
-          height: '600px',
+          height: '300px',
           width: '300px',
         };
         var gameMessageHeader = "";
@@ -122,11 +122,11 @@ class Main extends Component {
         }
 
         return (
-                <div id="tictactoe">
-                <div id="title">
-                    <h1>Tic Tac Toe</h1>
-                </div>
-                  <div style={style} id="board">
+            <div id="tictactoe">
+            <div id="title">
+                <h1>Tic Tac Toe</h1>
+            </div>
+                <div style={style} id="board">
                     <Square num="1" value={this.state.values[0]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                     <Square num="2" value={this.state.values[1]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                     <Square num="3" value={this.state.values[2]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
@@ -136,16 +136,16 @@ class Main extends Component {
                     <Square num="7" value={this.state.values[6]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                     <Square num="8" value={this.state.values[7]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
                     <Square num="9" value={this.state.values[8]} turn={this.state.playerTurn} click={this.handleButtonPressed.bind(this)}/>
-                  </div>
-                  <div id="gameMessage">
+                </div>
+                <div id="gameMessage">
                     <h2>{gameMessageHeader}</h2>
                     <p>{gameMessageSubtitle}</p>
-                  </div>
-                  <div id="reset">
-                      <ResetButton click={this.resetGame.bind(this)}/>
-                  </div>
+                </div>
+              <div id="reset">
+                  <ResetButton click={this.resetGame.bind(this)}/>
               </div>
-              );
+          </div>
+        );
     }
 }
 
