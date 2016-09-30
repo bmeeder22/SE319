@@ -100,9 +100,9 @@ user.clickHandler(s);};})("clicked p1 "));
 // Binding is often useful when assigning functions to event handlers.
 // <p id="p2"> Very well, Thank you!  </p>
 // clicking on paragraph with id p2 will work.
-// $("#p2").click((function (s,u) { return function () {
-//user.clickHandler.bind(u)(s); }; })("clicked p2 ", user2));
-$("#p2").click(foo2);
+$("#p2").click((function (s,u) { return function () {
+user.clickHandler.bind(u)(s); }; })("clicked p2 ", user2));
+// $("#p2").click(foo2);
 // TRY IT OUT BY CLICKING P2!
 
 }); // end of ready
