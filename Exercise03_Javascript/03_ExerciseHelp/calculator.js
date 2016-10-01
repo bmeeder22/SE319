@@ -46,25 +46,37 @@ Controller : {
       //TODO: Calculate whatever the operation is
       console.log("Calculating elements.");
 
+      var num1 = 0;
+      if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+        num1 = parseFloat(Calc.Model.result);
+      }
+      var num2 = parseFloat(Calc.View.textRow.value);
+
       if (Calc.Model.operator === "+") {
-        var num1 = parseInt(Calc.Model.result);
-        var num2 = parseInt(Calc.View.textRow.value);
         var sum = num1 + num2;
         console.log(num1 + " + " + num2 + " = " + sum);
         Calc.Model.result = sum.toString();
       }
       else if (Calc.Model.operator === "-") {
-        var num1 = parseInt(Calc.Model.result);
-        var num2 = parseInt(Calc.View.textRow.value);
         var diff = num1 - num2;
+        console.log(num1 + " - " + num2 + " = " + diff);
         Calc.Model.result = diff.toString();
+      }
+      else if (Calc.Model.operator === "*") {
+        var product = num1 * num2;
+        console.log(num1 + " * " + num2 + " = " + product);
+        Calc.Model.result = product.toString();
+      }
+      else if (Calc.Model.operator === "/") {
+        var quotient = num1 / num2;
+        console.log(num1 + " / " + num2 + " = " + quotient);
+        Calc.Model.result = quotient.toString();
       }
 
       Calc.View.textRow.value = Calc.Model.result;
       console.log("Result: " + Calc.Model.result);
       Calc.Controller.updateTextRow();
     }
-    // console.log("Elements calculated.");
   },
 
   updateTextRow : function() {
@@ -213,21 +225,41 @@ plusButtonHandler : function() {
     Calc.Controller.calculateElements();
   } else {
     Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
   }
-  Calc.View.textRow.value = "";
-  Calc.Controller.updateTextRow();
 },
 
 minusButtonHandler : function() {
-
+  console.log("Minus Button Pressed.");
+  Calc.Model.operator = "-";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
 },
 
 starButtonHandler : function() {
-
+  console.log("Star Button Pressed.");
+  Calc.Model.operator = "*";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
 },
 
 decimalButtonHandler : function() {
-
+  console.log("Decimal Button Pressed.");
+  if (!Calc.View.textRow.value.includes(".")) { //Don't allow the user to input multiple decimal points
+    Calc.View.textRow.value += ".";
+    Calc.Controller.updateTextRow();
+  }
 },
 
 equalButtonHandler : function() {
@@ -236,11 +268,22 @@ equalButtonHandler : function() {
 },
 
 slashButtonHandler : function(){
-
+  console.log("Slash Button Pressed.");
+  Calc.Model.operator = "/";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
 },
 
 clearButtonHandler : function() {
-
+  console.log("Clear Button Pressed.")
+  Calc.Model.result = "";
+  Calc.View.textRow.value = "";
+  Calc.Controller.updateTextRow();
 },
 
 showMemoryButtonHandler : function() {
@@ -252,17 +295,11 @@ subtractFromMemoryButtonHandler : function() {
 },
 
 addToMemoryButtonHandler : function() {
-
+  
 },
 
 clearMemoryButtonHandler : function() {
 
-},
-
-clearButtonHandler : function() {
-  Calc.Model.result = "";
-  Calc.View.textRow.value = "";
-  Calc.Controller.updateTextRow();
 }
 
 } // end of Calc;
