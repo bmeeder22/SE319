@@ -1,72 +1,95 @@
-var Calculator = {
+// CALCULATOR.JS
+//
+//
+//
+
+// 
+var Calc = {
 
 Model : {
-  oldVal : undefined
+  memory : undefined,
+  operator : undefined,
+  result : undefined
 },
 
-View: {
-  button1 : {id: "button1", type: "button", value: "", onclick:""},
-  button2 : {id: "button2", type: "button", value: "", onclick:""},
-  button3 : {id: "button3", type: "button", value: "", onclick:""},
-  button4 : {id: "button4", type: "button", value: "", onclick:""},
-  button5 : {id: "button5", type: "button", value: "", onclick:""},
-  button6 : {id: "button6", type: "button", value: "", onclick:""},
-  button7 : {id: "button7", type: "button", value: "", onclick:""},
-  button8 : {id: "button8", type: "button", value: "", onclick:""},
-  label : {id: "label", type: "label", value: "Click a Cell", onclick:""},
+
+View : {
+  textRow : {id: "textRow", type: "text", value: "", onclick:""},
+  button0 : {id: "button7", type: "button", value: 0, onclick:""},
+  button1 : {id: "button7", type: "button", value: 1, onclick:""},
+  button2 : {id: "button7", type: "button", value: 2, onclick:""},
+  button3 : {id: "button7", type: "button", value: 3, onclick:""},
+  button4 : {id: "button7", type: "button", value: 4, onclick:""},
+  button5 : {id: "button7", type: "button", value: 5, onclick:""},
+  button6 : {id: "button7", type: "button", value: 6, onclick:""},
+  button7 : {id: "button7", type: "button", value: 7, onclick:""},
+  button8 : {id: "button8", type: "button", value: 8, onclick:""},
+  button9 : {id: "button9", type: "button", value: 9, onclick:""},
+
+  plusButton : {id: "plusButton", type: "button", value: "+", onclick:""},
+  minusButton : {id: "minusButton", type: "button", value: "-", onclick:""},
+  starButton : {id: "starButton", type: "button", value: "*", onclick:""},
+  decimalButton : {id: "decimalButton", type: "button", value: ".", onclick:""},
+  equalButton : {id: "equalButton", type: "button", value: "=", onclick:""},
+  slashButton : {id: "slashButton", type: "button", value: "/", onclick:""},
+
+  clearButton : {id: "clearButton", type: "button", value: "C", onclick:""},
+  showMemoryButton : {id: "showMemoryButton", type: "button", value: "MR", onclick:""},
+  subtractFromMemoryButton : {id: "subtractFromMemoryButton", type: "button", value: "M-", onclick:""},
+  addToMemoryButton : {id: "addToMemoryButton", type: "button", value: "M+", onclick:""},
+  clearMemoryButton : {id: "clearMemoryButton", type: "button", value: "MC", onclick:""}
 },
 
 Controller : {
+  calculateElements : function() {
+    if (Calc.Model.operator !== undefined) {
+      //TODO: Calculate whatever the operation is
+      console.log("Calculating elements.");
 
-buttonHandler : function(that) {
- if (Match.oldVal == undefined) {
-   that.style.color = "blue";
-   Match.oldVal = that.value;
-   console.log("Made it visible");
-   document.getElementById("label").value = "Click a blank cell";
- }
- else if (that.value == Match.oldVal) {
-   document.getElementById("label").value = "Found Match";
-   that.style.color = "blue";
-   Match.oldVal = undefined;
- }
- else {
-   document.getElementById("label").value = "Not Matched";
- }
+      var num1 = 0;
+      if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+        num1 = parseFloat(Calc.Model.result);
+      }
+      var num2 = parseFloat(Calc.View.textRow.value);
 
-}
+      if (Calc.Model.operator === "+") {
+        var sum = num1 + num2;
+        console.log(num1 + " + " + num2 + " = " + sum);
+        Calc.Model.result = sum.toString();
+      }
+      else if (Calc.Model.operator === "-") {
+        var diff = num1 - num2;
+        console.log(num1 + " - " + num2 + " = " + diff);
+        Calc.Model.result = diff.toString();
+      }
+      else if (Calc.Model.operator === "*") {
+        var product = num1 * num2;
+        console.log(num1 + " * " + num2 + " = " + product);
+        Calc.Model.result = product.toString();
+      }
+      else if (Calc.Model.operator === "/") {
+        var quotient = num1 / num2;
+        console.log(num1 + " / " + num2 + " = " + quotient);
+        Calc.Model.result = quotient.toString();
+      }
 
+      Calc.View.textRow.value = Calc.Model.result;
+      console.log("Result: " + Calc.Model.result);
+      Calc.Controller.updateTextRow();
+    }
+  },
+
+  updateTextRow : function() {
+    document.getElementById("textRow").value = Calc.View.textRow.value;
+  }
 },
 
 run : function() {
-
+  Calc.attachHandlers();
+  console.log(Calc.display());
+  return Calc.display();
 },
 
-displayAll : function() {
-  var s;
-  s = "<table id=\"myTable\" border=2>"
-  s += "<tr><td>";
-  s += Match.displayElement(Match.View.button1);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button2);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button3);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button4);
-  s += "</td></tr>";
-  s += "<tr><td>";
-  s += Match.displayElement(Match.View.button5);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button6);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button7);
-  s += "</td><td>";
-  s += Match.displayElement(Match.View.button8);
-  s += "</td></tr>";
-  s += "<tr><td colspan=\"4\">" + Match.displayElement(Match.View.label) + "</td></tr>";
-  s += "</table>";
-  return s;
-},
 
 displayElement : function (element) {
   var s = "<input ";
@@ -74,35 +97,225 @@ displayElement : function (element) {
   s += " type=\"" + element.type + "\"";
   s += " value= \"" + element.value + "\"";
   s += " onclick= \"" + element.onclick + "\"";
-  if (element.type == "button") {
-    s += " style=\"color:white\"";
-  }
   s += ">";
   return s;
 
 },
 
-assignButtonValues: function () {
-   // loop over buttons
-   var arrValues = [];
-   // store 8 random values between 1 and 4 (some repeats)
-   for (var i = 0; i < 9; i++) {
-     arrValues.push(Math.floor(Math.random() * 4) + 1);
-   }
-   for (var i = 1; i <= 8; i++) {
-     Match.View["button" + i].value = arrValues[i-1];
-   }
-   // May be the case that some values are repeated!
-
+display : function() {
+  var s;
+  s = "<table id=\"myTable\" border=2>"
+  s += "<tr><td>" + Calc.displayElement(Calc.View.textRow) + "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.button7);
+  s += Calc.displayElement(Calc.View.button8);
+  s += Calc.displayElement(Calc.View.button9);
+  s += Calc.displayElement(Calc.View.plusButton);
+  s += "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.button4);
+  s += Calc.displayElement(Calc.View.button5);
+  s += Calc.displayElement(Calc.View.button6);
+  s += Calc.displayElement(Calc.View.minusButton);
+  s += "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.button1);
+  s += Calc.displayElement(Calc.View.button2);
+  s += Calc.displayElement(Calc.View.button3);
+  s += Calc.displayElement(Calc.View.starButton);
+  s += "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.button0);
+  s += Calc.displayElement(Calc.View.decimalButton);
+  s += Calc.displayElement(Calc.View.equalButton);
+  s += Calc.displayElement(Calc.View.slashButton);
+  s += "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.clearButton);
+  s += Calc.displayElement(Calc.View.showMemoryButton);
+  s += Calc.displayElement(Calc.View.subtractFromMemoryButton);
+  s += Calc.displayElement(Calc.View.addToMemoryButton);
+  s += "</td></tr>";
+  s += "<tr><td>";
+  s += Calc.displayElement(Calc.View.clearMemoryButton);
+  s += "</tr></td></table>";
+  return s;
 },
 
 attachHandlers : function() {
-   for (var i = 1; i <= 8; i++) {
-     Match.View["button" + i].onclick ="Match.Controller.buttonHandler(this)";
-}
+  Calc.View.button0.onclick = "Calc.button0Handler()";
+  Calc.View.button1.onclick = "Calc.button1Handler()";
+  Calc.View.button2.onclick = "Calc.button2Handler()";
+  Calc.View.button3.onclick = "Calc.button3Handler()";
+  Calc.View.button4.onclick = "Calc.button4Handler()";
+  Calc.View.button5.onclick = "Calc.button5Handler()";
+  Calc.View.button6.onclick = "Calc.button6Handler()";
+  Calc.View.button7.onclick = "Calc.button7Handler()";
+  Calc.View.button8.onclick = "Calc.button8Handler()";
+  Calc.View.button9.onclick = "Calc.button9Handler()";
 
+  Calc.View.plusButton.onclick ="Calc.plusButtonHandler()";
+  Calc.View.minusButton.onclick ="Calc.minusButtonHandler()";
+  Calc.View.starButton.onclick ="Calc.starButtonHandler()";
+  Calc.View.decimalButton.onclick ="Calc.decimalButtonHandler()";
+  Calc.View.equalButton.onclick ="Calc.equalButtonHandler()";
+  Calc.View.slashButton.onclick ="Calc.slashButtonHandler()";
 
+  Calc.View.clearButton.onclick ="Calc.clearButtonHandler()";
+  Calc.View.showMemoryButton.onclick ="Calc.showMemoryButtonHandler()";
+  Calc.View.subtractFromMemoryButton.onclick ="Calc.subtractFromMemoryButtonHandler()";
+  Calc.View.addToMemoryButton.onclick ="Calc.addToMemoryButtonHandler()";
+  Calc.View.clearMemoryButton.onclick ="Calc.clearMemoryButtonHandler()";
 },
 
+button0Handler : function() {
+  Calc.View.textRow.value += 0;
+  Calc.Controller.updateTextRow();
+},
 
+button1Handler : function() {
+  Calc.View.textRow.value += 1;
+  Calc.Controller.updateTextRow();
+},
+
+button2Handler : function() {
+  Calc.View.textRow.value += 2;
+  Calc.Controller.updateTextRow();
+},
+
+button3Handler : function() {
+  Calc.View.textRow.value += 3;
+  Calc.Controller.updateTextRow();
+},
+
+button4Handler : function() {
+  Calc.View.textRow.value += 4;
+  Calc.Controller.updateTextRow();
+},
+
+button5Handler : function() {
+  Calc.View.textRow.value += 5;
+  Calc.Controller.updateTextRow();
+},
+
+button6Handler : function() {
+  Calc.View.textRow.value += 6;
+  Calc.Controller.updateTextRow();
+},
+
+button7Handler : function() {
+  Calc.View.textRow.value += 7;
+  Calc.Controller.updateTextRow();
+},
+
+button8Handler : function() {
+  Calc.View.textRow.value += 8;
+  Calc.Controller.updateTextRow();
+},
+
+button9Handler : function() {
+  Calc.View.textRow.value += 9;
+  Calc.Controller.updateTextRow();
+},
+
+plusButtonHandler : function() {
+  console.log("Plus Button Pressed.");
+  Calc.Model.operator = "+";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
+},
+
+minusButtonHandler : function() {
+  console.log("Minus Button Pressed.");
+  Calc.Model.operator = "-";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
+},
+
+starButtonHandler : function() {
+  console.log("Star Button Pressed.");
+  Calc.Model.operator = "*";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
+},
+
+decimalButtonHandler : function() {
+  console.log("Decimal Button Pressed.");
+  if (!Calc.View.textRow.value.includes(".")) { //Don't allow the user to input multiple decimal points
+    Calc.View.textRow.value += ".";
+    Calc.Controller.updateTextRow();
+  }
+},
+
+equalButtonHandler : function() {
+  console.log("Equal Button Pressed.");
+  Calc.Model.result = Calc.Controller.calculateElements();
+},
+
+slashButtonHandler : function(){
+  console.log("Slash Button Pressed.");
+  Calc.Model.operator = "/";
+  if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
+    Calc.Controller.calculateElements();
+  } else {
+    Calc.Model.result = Calc.View.textRow.value;
+    Calc.View.textRow.value = "";
+    Calc.Controller.updateTextRow();
+  }
+},
+
+clearButtonHandler : function() {
+  console.log("Clear Button Pressed.")
+  Calc.Model.result = "";
+  Calc.View.textRow.value = "";
+  Calc.Controller.updateTextRow();
+},
+
+showMemoryButtonHandler : function() {
+  console.log("Show Memory Button Pressed.");
+  Calc.View.textRow.value = Calc.Model.memory;
+  Calc.Controller.updateTextRow();
+},
+
+subtractFromMemoryButtonHandler : function() {
+  console.log("Subtract From Memory Button Pressed.");
+},
+
+addToMemoryButtonHandler : function() {
+  console.log("Add To Memory Button Pressed.");
+  
+  if (Calc.View.textRow.value !== undefined && Calc.View.textRow.value !== "") {
+    var num1 = parseFloat(Calc.View.textRow.value);
+    var num2 = 0;
+    if (Calc.Model.memory !== undefined && Calc.Model.memory !== "") {
+      num2 = parseFloat(Calc.Model.memory);
+    }
+
+    var sum = num1 + num2;
+    Calc.Model.memory = sum.toString();
+  }
+  
+  console.log("Memory : " + Calc.Model.memory);
+},
+
+clearMemoryButtonHandler : function() {
+  console.log("Clear Memory Button Pressed.");
+  Calc.Model.memory = "";
 }
+
+} // end of Calc;
