@@ -43,7 +43,6 @@ View : {
 Controller : {
   calculateElements : function() {
     if (Calc.Model.operator !== undefined) {
-      //TODO: Calculate whatever the operation is
       console.log("Calculating elements.");
 
       var num1 = 0;
@@ -294,6 +293,19 @@ showMemoryButtonHandler : function() {
 
 subtractFromMemoryButtonHandler : function() {
   console.log("Subtract From Memory Button Pressed.");
+
+  if (Calc.View.textRow.value !== undefined && Calc.View.textRow.value !== "") {
+    var num1 = parseFloat(Calc.View.textRow.value);
+    var num2 = 0;
+    if (Calc.Model.memory !== undefined && Calc.Model.memory !== "") {
+      num2 = parseFloat(Calc.Model.memory);
+    }
+
+    var sum = num1 - num2;
+    Calc.Model.memory = sum.toString();
+  }
+
+  console.log("Memory : " + Calc.Model.memory);
 },
 
 addToMemoryButtonHandler : function() {
