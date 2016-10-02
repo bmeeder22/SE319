@@ -180,6 +180,11 @@ button1Handler : function() {
 
 tildeButtonHandler : function() {
   console.log("Tilde Button Pressed.");
+  var num = parseInt(BinCalc.View.binTextRow.value, 2);
+  var notNum = ~ num;
+  console.log("Number : " + notNum.toString(2));
+  BinCalc.View.binTextRow.value = notNum.toString(2);
+  BinCalc.Controller.updateTextRow();
 },
 
 plusButtonHandler : function() {
@@ -196,10 +201,20 @@ plusButtonHandler : function() {
 
 leftArrowButtonHandler : function() {
   console.log("Left Arrow Button Pressed.");
+  var num = parseInt(BinCalc.View.binTextRow.value, 2);
+  var shiftedNum = num << 1;
+  console.log("Number : " + shiftedNum);
+  BinCalc.View.binTextRow.value = shiftedNum.toString(2);
+  BinCalc.Controller.updateTextRow();
 },
 
 rightArrowButtonHandler : function() {
   console.log("Right Arrow Button Pressed.");
+  var num = parseInt(BinCalc.View.binTextRow.value, 2);
+  var shiftedNum = num >> 1;
+  console.log("Number : " + shiftedNum);
+  BinCalc.View.binTextRow.value = shiftedNum.toString(2);
+  BinCalc.Controller.updateTextRow();
 },
 
 minusButtonHandler : function() {
