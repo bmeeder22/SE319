@@ -57,16 +57,26 @@ Controller : {
         console.log(num1 + " - " + num2 + " = " + diff);
         BinCalc.Model.result = diff.toString(2);
       }
-  //     else if (BinCalc.Model.operator === "*") {
-  //       var product = num1 * num2;
-  //       console.log(num1 + " * " + num2 + " = " + product);
-  //       Calc.Model.result = product.toString();
-  //     }
-  //     else if (BinCalc.Model.operator === "/") {
-  //       var quotient = num1 / num2;
-  //       console.log(num1 + " / " + num2 + " = " + quotient);
-  //       Calc.Model.result = quotient.toString();
-  //     }
+      else if (BinCalc.Model.operator === "*") {
+        var product = num1 * num2;
+        console.log(num1 + " * " + num2 + " = " + product);
+        BinCalc.Model.result = product.toString(2);
+      }
+      else if (BinCalc.Model.operator === "/") {
+        var quotient = num1 / num2;
+        console.log(num1 + " / " + num2 + " = " + quotient);
+        BinCalc.Model.result = quotient.toString(2);
+      }
+      else if (BinCalc.Model.operator === "&") {
+        var newResult = num1 & num2;
+        console.log(num1.toString(2) + " & " + num2.toString(2) + " = " + newResult.toString(2));
+        BinCalc.Model.result = newResult.toString(2);
+      }
+      else if (BinCalc.Model.operator === "|") {
+        var newResult = num1 | num2;
+        console.log(num1.toString(2) + " | " + num2.toString(2) + " = " + newResult.toString(2));
+        BinCalc.Model.result = newResult.toString(2);
+      }
 
       BinCalc.View.binTextRow.value = BinCalc.Model.result;
       console.log("Result: " + BinCalc.Model.result);
@@ -206,34 +216,50 @@ minusButtonHandler : function() {
 
 ampersandButtonHandler : function() {
   console.log("Ampersand Button Pressed.");
+  BinCalc.Model.operator = "&";
+  if (BinCalc.Model.result !== undefined && BinCalc.Model.result !== "") {
+    BinCalc.Controller.calculateElements();
+  } else {
+    BinCalc.Model.result = BinCalc.View.binTextRow.value;
+    BinCalc.View.binTextRow.value = "";
+    BinCalc.Controller.updateTextRow();
+  }
 },
 
 pipeButtonHandler : function() {
   console.log("Pipe Button Pressed.");
+  BinCalc.Model.operator = "|";
+  if (BinCalc.Model.result !== undefined && BinCalc.Model.result !== "") {
+    BinCalc.Controller.calculateElements();
+  } else {
+    BinCalc.Model.result = BinCalc.View.binTextRow.value;
+    BinCalc.View.binTextRow.value = "";
+    BinCalc.Controller.updateTextRow();
+  }
 },
 
 starButtonHandler : function() {
   console.log("Star Button Pressed.");
-//   Calc.Model.operator = "*";
-//   if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
-//     Calc.Controller.calculateElements();
-//   } else {
-//     Calc.Model.result = Calc.View.textRow.value;
-//     Calc.View.textRow.value = "";
-//     Calc.Controller.updateTextRow();
-//   }
+  BinCalc.Model.operator = "*";
+  if (BinCalc.Model.result !== undefined && BinCalc.Model.result !== "") {
+    BinCalc.Controller.calculateElements();
+  } else {
+    BinCalc.Model.result = BinCalc.View.binTextRow.value;
+    BinCalc.View.binTextRow.value = "";
+    BinCalc.Controller.updateTextRow();
+  }
 },
 
 slashButtonHandler : function(){
   console.log("Slash Button Pressed.");
-//   Calc.Model.operator = "/";
-//   if (Calc.Model.result !== undefined && Calc.Model.result !== "") {
-//     Calc.Controller.calculateElements();
-//   } else {
-//     Calc.Model.result = Calc.View.textRow.value;
-//     Calc.View.textRow.value = "";
-//     Calc.Controller.updateTextRow();
-//   }
+  BinCalc.Model.operator = "/";
+  if (BinCalc.Model.result !== undefined && BinCalc.Model.result !== "") {
+    BinCalc.Controller.calculateElements();
+  } else {
+    BinCalc.Model.result = BinCalc.View.binTextRow.value;
+    BinCalc.View.binTextRow.value = "";
+    BinCalc.Controller.updateTextRow();
+  }
 },
 
 equalButtonHandler : function() {
