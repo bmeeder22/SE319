@@ -301,8 +301,8 @@ subtractFromMemoryButtonHandler : function() {
       num2 = parseFloat(Calc.Model.memory);
     }
 
-    var sum = num1 - num2;
-    Calc.Model.memory = sum.toString();
+    var diff = num2 - num1;
+    Calc.Model.memory = diff.toString();
   }
 
   console.log("Memory : " + Calc.Model.memory);

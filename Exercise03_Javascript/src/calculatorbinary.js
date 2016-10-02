@@ -275,35 +275,48 @@ clearButtonHandler : function() {
 },
 
 showMemoryButtonHandler : function() {
-//   console.log("Show Memory Button Pressed.");
-//   Calc.View.textRow.value = Calc.Model.memory;
-//   Calc.Controller.updateTextRow();
+  console.log("Show Memory Button Pressed.");
+  BinCalc.View.binTextRow.value = BinCalc.Model.memory;
+  BinCalc.Controller.updateTextRow();
 },
 
 subtractFromMemoryButtonHandler : function() {
   console.log("Subtract From Memory Button Pressed.");
+
+  if (BinCalc.View.binTextRow.value !== undefined && BinCalc.View.binTextRow.value !== "") {
+    var num1 = parseInt(BinCalc.View.binTextRow.value, 2);
+    var num2 = 0;
+    if (BinCalc.Model.memory !== undefined && BinCalc.Model.memory !== "") {
+      num2 = parseInt(BinCalc.Model.memory, 2);
+    }
+
+    var diff = num2 - num1;
+    BinCalc.Model.memory = diff.toString(2);
+  }
+  
+  console.log("Memory : " + BinCalc.Model.memory);
 },
 
 addToMemoryButtonHandler : function() {
   console.log("Add To Memory Button Pressed.");
   
-//   if (Calc.View.textRow.value !== undefined && Calc.View.textRow.value !== "") {
-//     var num1 = parseFloat(Calc.View.textRow.value);
-//     var num2 = 0;
-//     if (Calc.Model.memory !== undefined && Calc.Model.memory !== "") {
-//       num2 = parseFloat(Calc.Model.memory);
-    // }
+  if (BinCalc.View.binTextRow.value !== undefined && BinCalc.View.binTextRow.value !== "") {
+    var num1 = parseInt(BinCalc.View.binTextRow.value, 2);
+    var num2 = 0;
+    if (BinCalc.Model.memory !== undefined && BinCalc.Model.memory !== "") {
+      num2 = parseInt(BinCalc.Model.memory, 2);
+    }
 
-//     var sum = num1 + num2;
-//     Calc.Model.memory = sum.toString();
-//   }
+    var sum = num1 + num2;
+    BinCalc.Model.memory = sum.toString(2);
+  }
   
-//   console.log("Memory : " + Calc.Model.memory);
-// },
+  console.log("Memory : " + BinCalc.Model.memory);
+},
 
-// clearMemoryButtonHandler : function() {
-//   console.log("Clear Memory Button Pressed.");
-//   Calc.Model.memory = "";
+clearMemoryButtonHandler : function() {
+  console.log("Clear Memory Button Pressed.");
+  BinCalc.Model.memory = "";
 }
 
 } // end of Calc;
