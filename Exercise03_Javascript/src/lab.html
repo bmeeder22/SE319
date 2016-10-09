@@ -2,14 +2,20 @@
 <head>
 <script src="calculator.js"> 
 </script>
+<script src="calculatorbinary.js">
+</script>
 </head>
 <body>
+<h2>Calculator</h2>
 <div id="myCalc">
 </div>
+<h2>Binary Calculator</h2>
+<div id="binaryCalc"></div>
 
 
 <script>
 document.getElementById("myCalc").innerHTML = Calc.run();
+document.getElementById("binaryCalc").innerHTML = BinCalc.run();
 </script>
 </body>
 </html>
