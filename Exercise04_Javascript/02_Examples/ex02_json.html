@@ -35,17 +35,17 @@ var testObj = {
 };
 
 var myConvertedObject = JSON.stringify(testObj);
-console.log(myConvertedObject);
+console.log("myConvertedObject: " + myConvertedObject);
 // TODO: 5. CONVERT testobj to a JSON String format
-// var text =  ??? ;
-// console.log(text);
+var test = JSON.stringify(testObj);
+console.log(test);
 
 
 //TODO: 6. CONVERT the JSON text to a JAVASCRIPT object 
-//var convertedObj = ??? ;
-//console.log(convertedObj["a"]);
-//console.log(convertedObj.b);
-//console.log(convertedObj.g);
+var convertedObj = JSON.parse(test);
+console.log(convertedObj["a"]);
+console.log(convertedObj.b);
+console.log(convertedObj.g);
 
 } 
 catch (error) {

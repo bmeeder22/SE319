@@ -6,19 +6,51 @@
 // Here is another way. One problem of this method is that the
 // instanceof operator does not work.
 // TODO: Understand why this pattern for creating objects does not work.
+// Answer: instanceof doesn't work because there is no prototype object to check the object against.
 
 // -----------------
 // Factory pattern
 // -----------------
-function createStudent() {
+function createStudent(num) {
   var o = new Object();
   o.name = "Tom";
-  o.foo = function() { console.log("hi");};
+  // o.id = num;
+  o.foo = function() { console.log("Object " + num + ": Hi");};
   return o;
 }
 
-var obj3 = createStudent();
+var obj3 = createStudent(3);
 console.log(JSON.stringify(obj3));
+
+var obj2 = createStudent(2);
+console.log(JSON.stringify(obj2));
+
+var obj1 = createStudent(1);
+console.log(JSON.stringify(obj1));
+
+obj1.foo();
+obj2.foo();
+obj3.foo();
+
+obj1.name = "Sally";
+
+console.log(obj1 instanceof createStudent); // false
+
+obj1.foo = function() {
+	console.log("This is a new function");
+}
+
+obj1.foo();
+obj2.foo();
+
+console.log(obj1.foo instanceof obj2.foo); // false
+
+console.log(JSON.stringify(obj1));
+console.log(JSON.stringify(obj2));
+console.log(JSON.stringify(obj3));
+
+// Throws a RegerenceError
+// console.log(obj1 instanceof o);
 
 </script>
 </head>
