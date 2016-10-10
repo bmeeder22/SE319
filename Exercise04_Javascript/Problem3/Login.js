@@ -9,10 +9,10 @@ var handleLogin = function() {
     console.log(pass);
 
     if(username == "admin" && pass == "admin") {
-        window.location = "adminview.html?user=" + username;
+        window.location = "BooksLibrary.html?user=" + username;
     }
-    else if(username == "U") {
-        window.location = "underview.html";
+    else if(username.includes("U")) {
+        window.location = "BooksLibrary.html?user=" + username;
     }
     else {
         alert("this is not a valid username or password");

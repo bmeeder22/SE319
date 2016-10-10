@@ -11,7 +11,6 @@ class Library {
         this.username = this.getURLParameter('user');
 
         this.checkedOut = 0;
-        this.checkedOutBooks = [];
 
         this.art = new Shelf("Art", this.handleBookClick.bind(this));
         this.science = new Shelf("Science", this.handleBookClick.bind(this));
@@ -20,9 +19,10 @@ class Library {
 
         if(document.cookie === '') {
             //add 20 books
-            this.art.addBooks(["B1", "B2"]);
-            this.sport.addBook("B3");
-            this.science.addBooks(["B4", "B5", "B6"]);
+            this.art.addBooks(["R1", "B1", "R2", "B2", "B3", "R5", "B20"]);
+            this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
+            this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
+            this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
 
             this.refreshCookies();
         }
@@ -133,17 +133,7 @@ class Library {
     }
 
     handleBookClick(id) {
-        if(this.checkIsNotClicked(id)) {
-            this.checkedOut++;
-            this.checkedOutBooks.push(id);
-            console.log(this.checkedOut);
-        }
-
         this.refreshCookies();
-    }
-
-    checkIsNotClicked(id) {
-        return !this.checkedOutBooks.includes(id);
     }
 
     addBook() {
@@ -205,16 +195,15 @@ class Shelf {
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
 
-            var newBook = new Book(bookInfo.title, bookInfo.id, this.click);
+            var newBook = new Book(bookInfo.title, bookInfo.id, this.click, bookInfo.borrowedBy);
             newBook.checkedOut = bookInfo.checkedOut;
-            newBook.borrowedBy = bookInfo.borrowedBy;
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
         }
     }
 
     addBook(title) {
-        this.books.push(new Book(title, this.subject + this.bookId ,this.click));
+        this.books.push(new Book(title, this.subject + this.bookId ,this.click, ""));
         this.bookId++;
         document.cookie = this.subject + "=" + JSON.stringify(this.books);
     }
@@ -225,14 +214,13 @@ class Shelf {
 }
 
 class Book {
-    constructor(title, id ,click) {
+    constructor(title, id ,click, borrowedBy) {
         this.checkedOut = false;
-        this.borrowedBy = "";
+        this.borrowedBy = borrowedBy;
         this.title = title;
         this.id = id;
 
         this.HTML = this.render(title);
-        this.HTML.title = "hello!";
 
         this.click = click;
     }
@@ -241,8 +229,10 @@ class Book {
         var HTML = document.createElement('td');
         HTML.innerHTML = title;
         HTML.style = "background-color:white";
-        HTML.id = "book" + title;
+        HTML.id = this.id;
         HTML.onclick = this.handleClick.bind(this);
+
+        HTML.className = this.borrowedBy;
 
         return HTML;
     }
@@ -258,10 +248,18 @@ class Book {
         }
 
         if(this.checkedOut) {
-            this.checkIn();
+            var num = $('.' + this.getURLParameter('user')).length-1;
+            console.log(num);
+            if(num <= 2)
+                this.checkIn();
+            else return;
         }
         else {
-            this.checkOut();
+            var num = $('.' + this.getURLParameter('user')).length+1;
+            console.log(num);
+            if(num <= 2)
+                this.checkOut();
+            else return;
         }
 
         this.click(this.id);
@@ -271,12 +269,14 @@ class Book {
         this.HTML.style = "background-color:white";
         this.checkedOut = false;
         this.borrowedBy = "";
+        this.HTML.className = "";
     }
 
     checkOut() {
         this.HTML.style = "background-color:red";
         this.checkedOut = true;
         this.borrowedBy = this.getURLParameter("user");
+        this.HTML.className = this.borrowedBy;
     }
 
     handleAdminClick() {
