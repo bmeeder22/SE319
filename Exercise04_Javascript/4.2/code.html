@@ -1,0 +1,78 @@
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script src="code.js"></script>
+</head>
+
+<body>
+
+<!-- CSS STYLE ELEMENT CHANGES -->
+<div id="colorDiv">
+	<h1>Lab 4</h1>
+	<h2>Part 2</h2>
+	<!-- Event: Click -->
+	<p id="textColorExample" style="color:blue">Click me to change my color.</p>
+</div>
+<div>
+	<button id="colorButton" style="color:blue">This button changes 'p' elements to red.</button>
+</div>
+
+<!-- Event: Mouseover -->
+<div>
+	<h3 id="textSizeExample" size="">Hover over me to change the size.</h3>
+</div>
+
+<!-- Event: double click-->
+<div id="backGroundColorExample">
+	<h3>Double-click me to change my background-color.</h3>
+</div>
+
+<p id="changeFontExample" style="font-family:Comic Sans MS">I am a terrible font choice! An evil developer put a spell on me that can only be broken by the click of a cursor.</p>
+
+<p id="cursorExample" style="cursor:crosshair">Click me to see your cursor change.</p>
+
+<!-- EFFECTS -->
+<div id="effectExamples">
+	<h3>Effects</h3>
+
+	<!-- Effect: hide/show -->
+	<p id="hiddenText">BOO! I have been hiding right under your nose!</p>
+	<button id="unhideTextButton">Click me to reveal a secret...</button>
+
+	<!-- Effect: custom animation: text opacity/position -->
+	<p id="shyText" style="position:relative">Don't touch me, or I will fly away!</p>
+
+	<!-- Effect: custom animation: moving a div around the screen -->
+	<div id="blueBox" style="background:#0000ff;height:150px;width:150px;position:relative;">
+		<button id="upButton">Going Up</button>
+		<button id="downButton">Going Down</button>
+	</div>
+	<!-- Event: blur -->
+	<p id="name">What is your name?</p>
+	<input id="blurryText" type="text" placeholder="Enter your name"/>
+
+	<!-- Effect: slideToggle -->
+	<div id="toggleText" style="background-color:#00ff55">
+		<p id="toggle1">We don't like to be up at the same time.</p>
+		<p id="toggle2">Call it a sibling rivalry</p>
+		<button id="toggleTextButton">Toggle</button>
+	</div>
+
+	<!-- Effect: stop -->
+	<div id="crawlRight" style="background-color:#ff5555;width:100px;
+      height:100px;
+      -webkit-border-radius:100px;
+      -moz-border-radius:100px;
+      border-radius:100px;
+      position:relative;">
+		<button id="stopButton" style="margin-top:30px;margin-left:30px">Stop</button>
+	</div>
+</div>
+
+<!-- Event: change -->
+<input id="switchColorOnChange" type="text" placeholder="I change color when I change my value." style="color:blue;min-width:300"/>
+
+</body>
+
+</html>
