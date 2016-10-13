@@ -6,7 +6,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
         var handleLogin = function() {
+            var user = $('#username').val();
+            var pass = $('#password').val();
 
+            $.post('checkLogin.php',
+                {
+                    user: user,
+                    pass: pass
+                },
+                function(data) {
+                    if(data == 'No user found for that combination') {
+                        alert(data);
+                    }
+                    else {
+                        var array = JSON.parse(data);
+                        console.log(array);
+                        window.location = 'viewPosts.php';
+                    }
+                }
+            );
         };
     </script>
 </head>
@@ -17,5 +35,6 @@
 <h4>Password</h4>
 <input id="password" type="text"/>
 <button onclick="handleLogin()">Login</button>
+<div id="result"></div>
 </body>
 </html>
