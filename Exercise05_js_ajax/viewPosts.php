@@ -1,7 +1,63 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: benjaminmeeder
- * Date: 10/10/16
- * Time: 8:32 PM
- */
+session_start();
+
+$file = file_get_contents('posts.txt');
+$user_posts = convertJSONtoArray($file);
+
+function convertJSONtoArray($file) {
+    $posts = json_decode($file);
+    $user_posts = [];
+
+    for($i = 0; $i<count($posts); $i++) {
+        $postObject = $posts[$i];
+        $post = get_object_vars($postObject);
+        array_push($user_posts, $post);
+
+//      if you need to filter by username use this if statement
+//      if($post['name'] == $_SESSION['user']) {
+
+    }
+
+    return $user_posts;
+}
+
+function renderTable() {
+    renderTableTitle();
+    renderPosts();
+}
+
+function renderTableTitle() {
+    echo '<thead><tr><th class="text-left">By</th><th class="text-left">Post</th></tr></thead>';
+}
+
+function renderPosts() {
+    global $user_posts;
+    for($i = 0; $i<count($user_posts); $i++) {
+        $post = $user_posts[$i];
+        echo '<tr>';
+        echo '<td onclick="">'.$post["from"].'</td>';
+        echo '<td onclick="console.log(\'test\')">'.$post["post"].'</td>';
+        echo '</tr>';
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="viewPosts.css">
+        <script src="makePost.js"></script>
+    </head>
+    <body>
+        <table>
+            <?php renderTable(); ?>
+        </table>
+
+        <br>
+
+        <button onclick="handleMakePost();">Make a post!</button>
+
+    </body>
+</html>
