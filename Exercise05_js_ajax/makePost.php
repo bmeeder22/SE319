@@ -1,14 +1,20 @@
 <?php
+session_start();
+
 $file = file_get_contents('posts.txt');
-$user_posts = convertJSONtoArray($file);
+$posts = convertJSONtoArray($file);
+addPostToFile($posts, $file);
 
-function addPostToFile() {
-    $post = $_REQUEST['post'];
+function addPostToFile($posts) {
+    $post = [
+        'name' => $_SESSION['user'],
+        'post' => $_REQUEST['post'],
+    ];
 
-    array_push($user_posts, $post);
+    array_push($posts, $post);
+    $JSON = json_encode($posts);
 
-    $JSON = json_encode($user_posts);
-    
+    file_put_contents('posts.txt', $JSON);
 }
 
 function convertJSONtoArray($file) {
@@ -19,9 +25,6 @@ function convertJSONtoArray($file) {
         $postObject = $posts[$i];
         $post = get_object_vars($postObject);
         array_push($user_posts, $post);
-
-//      if you need to filter by username use this if statement
-//      if($post['name'] == $_SESSION['user']) {
     }
 
     return $user_posts;

@@ -12,10 +12,6 @@ function convertJSONtoArray($file) {
         $postObject = $posts[$i];
         $post = get_object_vars($postObject);
         array_push($user_posts, $post);
-
-//      if you need to filter by username use this if statement
-//      if($post['name'] == $_SESSION['user']) {
-
     }
 
     return $user_posts;
@@ -35,7 +31,7 @@ function renderPosts() {
     for($i = 0; $i<count($user_posts); $i++) {
         $post = $user_posts[$i];
         echo '<tr>';
-        echo '<td onclick="">'.$post["from"].'</td>';
+        echo '<td onclick="">'.$post["name"].'</td>';
         echo '<td onclick="console.log(\'test\')">'.$post["post"].'</td>';
         echo '</tr>';
     }
@@ -47,16 +43,20 @@ function renderPosts() {
 <html>
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="viewPosts.css">
-        <script src="makePost.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/viewPosts.css">
+        <script src="js/makePost.js"></script>
     </head>
     <body>
+        <div>
+            <button id="logout" onclick="window.location = 'logout.php'">Logout</button>
+        </div>
         <table>
             <?php renderTable(); ?>
         </table>
 
         <br>
 
+        <input id="newpost" type="text"/>
         <button onclick="handleMakePost();">Make a post!</button>
 
     </body>
