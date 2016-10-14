@@ -154,7 +154,7 @@ button {
     font-size: 16px;
 }
 
-#logout {
+.toolbar {
     position:absolute;
     top:0;
     right:0;
