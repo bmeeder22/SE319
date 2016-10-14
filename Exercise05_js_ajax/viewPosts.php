@@ -47,8 +47,10 @@ function renderPosts() {
         <script src="js/makePost.js"></script>
     </head>
     <body>
-        <div>
-            <button id="logout" onclick="window.location = 'logout.php'">Logout</button>
+        <div class="toolbar">
+            <button onclick="window.location='sendMessage.php'">Send Message</button>
+            <button onclick="window.location = 'inbox.php'">Inbox</button>
+            <button onclick="window.location = 'logout.php'">Logout</button>
         </div>
         <table>
             <?php renderTable(); ?>
