@@ -1,4 +1,5 @@
 <?php
+
 //-----------------------FROM ExampleCryptography.php----------------------------
 $path = 'phpseclib';
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
@@ -28,6 +29,11 @@ function rsa_decrypt($string, $private_key)
     return $cipher->decrypt($string);
 }
 
+//Test out the rsa encryption functions
+// $plaintext = "This is some plaintext to encrypt";
+// $ciphertext = rsa_encrypt($plaintext, $public_key);
+// $decipheredtext = rsa_decrypt($ciphertext, $private_key);
+
 //-----------------------END ExampleCryptography.php----------------------------
 
 session_start();
@@ -41,7 +47,27 @@ $file = file_get_contents('messages.txt');
 $decipheredtext = rsa_decrypt($file, $private_key);
 
 $messages = convertJSONtoArray($decipheredtext);
-$messageArray = addMessageToFile($messages, $public_key);
+addMessageToFile($messages, $public_key);
+
+function addMessageToFile($messages, $public_key) {
+    $message = [
+        'reciever' => $_GET['reciever'],
+        'sender' => $_SESSION['user'],
+        'body' => $_GET['body']
+    ];
+
+    array_push($messages, $message);
+    echo "Messages: ";
+    var_dump($messages);
+    $JSON = json_encode($messages);
+
+    $encryptedtext = rsa_encrypt($JSON, $public_key);
+
+    // echo "Encrypted text: "
+    // echo $encryptedtext
+
+    file_put_contents('messages.txt', $encryptedtext);
+}
 
 function convertJSONtoArray($string) {
     $messages = json_decode($string);
@@ -55,29 +81,9 @@ function convertJSONtoArray($string) {
 
     return $messageArray;
 }
-
-function renderTable() {
-    renderTableTitle();
-    renderMessages();
-}
-
-function renderTableTitle() {
-    echo '<thead><tr><th class="text-left">From</th><th class="text-left">Message</th></tr></thead>';
-}
-
-function renderMessages() {
-    global $messageArray;
-    for($i = 0; $i<count($messageArray); $i++) {
-        $message = $messageArray[$i];
-        echo '<tr>';
-        echo '<td>'.$message["sender"].'</td>';
-        echo '<td id="'.$i.'"onclick="">'.$message["body"].'</td>';
-        echo '</tr>';
-    }
-}
 ?>
 
-<!DOCTYPE html>
+!DOCTYPE html>
 <html>
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -85,13 +91,14 @@ function renderMessages() {
     </head>
     <body>
         <div class="toolbar">
-        	<button onclick="window.location = 'sendMessage.php'">Send Message</button>
+            <button onclick="window.location = 'sendMessage.php'">Send Message</button>
+            <button onclick="window.location = 'inbox.php'">Inbox</button>
             <button onclick="window.location = 'viewPosts.php'">View Posts</button>
             <button onclick="window.location = 'logout.php'">Logout</button>
         </div>
-        <table id="inbox">
-            <?php renderTable(); ?>
-        </table>
+
+        <br>
+        <h2>Message Sent!</h2>
 
     </body>
 </html>

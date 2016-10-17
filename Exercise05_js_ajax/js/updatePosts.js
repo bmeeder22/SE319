@@ -6,7 +6,8 @@ function handleUpdatePost(id, name) {
 		{
 			postId: id,
 			poster: name,
-			message: message
+			message: message,
+			delete: false
 		},
 		function(postChanged) {
 			if (postChanged) {
@@ -16,4 +17,19 @@ function handleUpdatePost(id, name) {
 				alert("You don't have permission to edit that post.");
 			}
 		});
+}
+
+function deletePost(id) {
+	$.post( "updatePosts.php", {
+		postId: id,
+		delete: true
+	},
+	function(postDeleted) {
+		if (postDeleted) {
+			alert("Post deleted.");
+			$("#postsTable").load(location.href + " #postsTable"); // refresh the table
+		} else {
+			alert("Something went wrong!");
+		}
+	});
 }

@@ -35,6 +35,9 @@ function renderPosts() {
         echo '<td>'.$i.'</td>';
         echo '<td>'.$post["name"].'</td>';
         echo '<td id="'.$i.'"onclick="handleUpdatePost(this.id, &#39;'.$post["name"].'&#39;)">'.$post["post"].'</td>';
+        if($_SESSION['user'] === 'admin') {
+            echo '<td onclick="deletePost('.$i.')">Delete</td>';
+        }
         echo '</tr>';
     }
 }
@@ -62,7 +65,7 @@ function renderPosts() {
         <br>
 
         <input id="newpost" type="text"/>
-        <button onclick="handleMakePost()">Make a post!</button>
+        <button id="submitNewPost" onclick="handleMakePost()">Make a post!</button>
 
     </body>
 </html>
