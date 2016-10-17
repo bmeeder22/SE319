@@ -18,7 +18,7 @@ session_start();
 
         <br>
         <form action="makeMessage.php">
-    		<input name="reciever" type="text" placeholder="To: "><br>
+    		<input name="receiver" type="text" placeholder="To: "><br>
             <input name="body" type="text" placeholder="Enter your message..."><br>
             <input type="submit"/>
         </form>

@@ -10,9 +10,11 @@ function handleUpdatePost(id, name) {
 			delete: false
 		},
 		function(postChanged) {
+			// alert(postChanged);
 			if (postChanged) {
 				alert("Post updated!");
 				$("#postsTable").load(location.href + " #postsTable"); // refresh the table
+				$("#submitNewPost").load(location.href + " #submitNewPost"); // refresh the table
 			} else {
 				alert("You don't have permission to edit that post.");
 			}

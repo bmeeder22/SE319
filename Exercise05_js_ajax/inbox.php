@@ -32,6 +32,12 @@ function rsa_decrypt($string, $private_key)
 
 session_start();
 
+//if ($_SESSION['user'] == 'neig') {
+//    echo "true";
+//} else {
+//    echo "false";
+//}
+
 //Get public and private keys
 $private_key = $_SESSION['privatekey'];
 $public_key = $_SESSION['publickey'];
@@ -40,8 +46,9 @@ $file = file_get_contents('messages.txt');
 
 $decipheredtext = rsa_decrypt($file, $private_key);
 
-$messages = convertJSONtoArray($decipheredtext);
-$messageArray = addMessageToFile($messages, $public_key);
+//echo $decipheredtext;
+
+$messageArray = convertJSONtoArray($decipheredtext);
 
 function convertJSONtoArray($string) {
     $messages = json_decode($string);
@@ -69,10 +76,17 @@ function renderMessages() {
     global $messageArray;
     for($i = 0; $i<count($messageArray); $i++) {
         $message = $messageArray[$i];
-        echo '<tr>';
-        echo '<td>'.$message["sender"].'</td>';
-        echo '<td id="'.$i.'"onclick="">'.$message["body"].'</td>';
-        echo '</tr>';
+//        var_dump($message);
+//        echo "Receiver: ";
+//        echo $message['receiver'];
+//        echo "User: ";
+//        echo $message['user'];
+        if ($message['receiver'] === $_SESSION['user']) {
+            echo '<tr>';
+            echo '<td>' . $message["sender"] . '</td>';
+            echo '<td id="' . $i . '"onclick="">' . $message["body"] . '</td>';
+            echo '</tr>';
+        }
     }
 }
 ?>

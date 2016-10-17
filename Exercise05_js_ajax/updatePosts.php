@@ -23,17 +23,17 @@ function deletePostFromFile($postId) {
 // echo "POSTER: ";
 // echo $_POST['poster'];
 // echo "user == poster: ";
-
-// $user = $_Session['user'];
-// $poster = $_POST['poster'];
-// if ($user === $poster) {
+//
+ $user = $_SESSION['user'];
+ $poster = $_POST['poster'];
+// if (strcmp($user,$poster)) {
 // 	echo "true";
 // } else {
 // 	echo "false";
 // }
 
-if($_SESSION['user'] === 'admin' || $_Session['user'] === $_POST['poster']) {
-	if ($_POST['delete'] && $_SESSION['user'] === 'admin') {
+if ($user === 'admin' or $user === $poster) {
+	if ($_POST['delete'] && $user === 'admin') {
 		deletePostFromFile($_POST['postId']);
 		echo true;
 	} else if (!$_POST['delete']) {

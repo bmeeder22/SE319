@@ -51,7 +51,7 @@ addMessageToFile($messages, $public_key);
 
 function addMessageToFile($messages, $public_key) {
     $message = [
-        'reciever' => $_GET['reciever'],
+        'receiver' => $_GET['receiver'],
         'sender' => $_SESSION['user'],
         'body' => $_GET['body']
     ];
