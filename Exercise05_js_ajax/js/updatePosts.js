@@ -10,7 +10,6 @@ function handleUpdatePost(id, name) {
 			delete: false
 		},
 		function(postChanged) {
-			// alert(postChanged);
 			if (postChanged) {
 				alert("Post updated!");
 				$("#postsTable").load(location.href + " #postsTable"); // refresh the table

@@ -10,5 +10,5 @@ function handleMakePost() {
 	);
 
 	$("#postsTable").load(location.href + " #postsTable"); // refresh the table
-	$("#submitNewPost").load(location.href + " #submitNewPost"); // refresh the table
+	$("#addPost").load(location.href + " #addPost"); // refresh new post input
 }

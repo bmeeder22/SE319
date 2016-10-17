@@ -18,30 +18,25 @@ function deletePostFromFile($postId) {
     file_put_contents('posts.txt', $JSON);
 }
 
-// echo "USER: ";
-// echo $_SESSION['user'];
-// echo "POSTER: ";
-// echo $_POST['poster'];
-// echo "user == poster: ";
-//
  $user = $_SESSION['user'];
  $poster = $_POST['poster'];
-// if (strcmp($user,$poster)) {
-// 	echo "true";
-// } else {
-// 	echo "false";
-// }
 
-if ($user === 'admin' or $user === $poster) {
-	if ($_POST['delete'] && $user === 'admin') {
+if (strcmp($user, 'admin') == 0) { //USER IS ADMIN
+	// echo "user is admin.";
+	if ($_POST['delete']) { //ADMIN wants to delete the post
 		deletePostFromFile($_POST['postId']);
-		echo true;
-	} else if (!$_POST['delete']) {
-		updatePostsFile($_POST['message'], $_POST['postId']);
+		// echo "admin wants to delete post";
 		echo true;
 	} else {
-		echo false;
+		updatePostsFile($_POST['message'], $_POST['postId']);
+		// echo "admin wants to update post";
+		echo true;
 	}
-} else {
+} else if (strcmp($user, $poster) == 0){ //USER IS THE ORIGINAL POSTER
+	updatePostsFile($_POST['message'], $_POST['postId']);
+	// echo "original user wants to update their post";
+	echo true;
+} else { //USER DOES NOT HAVE PERMISSION TO ACCESS THIS POST
+	// echo "user does not have permission";
 	echo false;
 }
