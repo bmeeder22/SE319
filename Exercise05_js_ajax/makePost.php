@@ -3,12 +3,12 @@ session_start();
 
 $file = file_get_contents('posts.txt');
 $posts = convertJSONtoArray($file);
-addPostToFile($posts, $file);
+addPostToFile($posts);
 
 function addPostToFile($posts) {
     $post = [
         'name' => $_SESSION['user'],
-        'post' => $_REQUEST['post'],
+        'post' => $_POST['post'],
     ];
 
     array_push($posts, $post);
