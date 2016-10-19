@@ -36,21 +36,44 @@ function rsa_decrypt($string, $private_key)
 
 //-----------------------END ExampleCryptography.php----------------------------
 
-session_start();
+function getUserPublicKey($username) {
+    global $users;
+    foreach ($users as $user) {
+        if (strcmp($user['username'], $username) == 0) {
+            return $user['publickey'];
+        }
+    }
+    return "USER NOT FOUND";
+}
 
-//Get public and private keys
-$private_key = $_SESSION['privatekey'];
-$public_key = $_SESSION['publickey'];
+function getUsersArray($file) {
+    $users = [];
+    $fullUserStrings = explode("&", $file);
+    // var_dump($fullUserStrings);
+    foreach ($fullUserStrings as &$userString) {
+        // var_dump($userString);
+        // echo"<br>";
+        if (strcmp($userString, '') != 0) {
+            $userInfo = explode(":", $userString);
 
-$file = file_get_contents('messages.txt'); //retrieve contents of file in JSON format
+            $user = [
+                username => $userInfo[0],
+                publickey => $userInfo[2]
+            ];
+            array_push($users, $user);
+            // echo "Next User: ";
+            // var_dump($user);
+            // echo "<br>";
+        }
 
-$encryptedMessages = convertJSONtoArray($file); //transform JSON into an array of message objects
-
-addMessageToFile($encryptedMessages, $public_key);
+    }
+    return $users;
+}
 
 function addMessageToFile($messages, $public_key) {
     // $myfile = fopen("messages.txt", "a");
     global $file;
+
     $encryptedText = rsa_encrypt($_GET['body'], $public_key);
 
     $txt = $_GET['receiver'].'STRING-BREAK'.$_SESSION['user'].'STRING-BREAK'.$encryptedText."END-MESSAGE";
@@ -91,6 +114,33 @@ function convertJSONtoArray($string) {
 
     return $messageArray;
 }
+
+//----------------------END FUNCTION DECLARATIONS-----------------------
+session_start();
+
+//Get public and private keys
+$private_key = $_SESSION['privatekey'];
+$public_key = $_SESSION['publickey'];
+
+$usersFile = file_get_contents('users.txt');
+$users = getUsersArray($usersFile);
+// var_dump($users);
+
+$public_key = getUserPublicKey($_GET['receiver']);
+
+if (strcmp($public_key, "USER NOT FOUND") == 0) {
+    echo "No user found by that name.";
+    exit();
+}
+
+$file = file_get_contents('messages.txt'); //retrieve contents of file in JSON format
+
+$encryptedMessages = convertJSONtoArray($file); //transform JSON into an array of message objects
+
+addMessageToFile($encryptedMessages, $public_key);
+
+
+
 ?>
 
 <!DOCTYPE html>
