@@ -30,37 +30,38 @@ function rsa_decrypt($string, $private_key)
 
 //-----------------------END ExampleCryptography.php----------------------------
 
-session_start();
-
-//if ($_SESSION['user'] == 'neig') {
-//    echo "true";
-//} else {
-//    echo "false";
-//}
-
-//Get public and private keys
-$private_key = $_SESSION['privatekey'];
-$public_key = $_SESSION['publickey'];
-
-$file = file_get_contents('messages.txt');
-
-$decipheredtext = rsa_decrypt($file, $private_key);
-
-//echo $decipheredtext;
-
-$messageArray = convertJSONtoArray($decipheredtext);
-
-function convertJSONtoArray($string) {
-    $messages = json_decode($string);
+function convertFileToMessageArray($file, $private_key) {
+    $messagesStringArray = explode('END-MESSAGE', $file); //create an array of the messages as strings
     $messageArray = [];
 
-    for($i = 0; $i<count($messages); $i++) {
-        $messageObject = $messages[$i];
-        $message = get_object_vars($messageObject);
-        array_push($messageArray, $message);
+    foreach($messagesStringArray as &$fullMessageString) {
+        //only check strings that are not empty
+        if (strcmp($fullMessageString, '') != 0) {
+            $messageStrings = explode('STRING-BREAK', $fullMessageString);
+            
+            $message = [
+                receiver => $messageStrings[0],
+                sender => $messageStrings[1],
+                body => $messageStrings[2]
+            ];
+            //if the user is the recipient of the message, decrypt it and add it to the array
+            if (strcmp($message['receiver'], $_SESSION['user']) == 0) {
+                $message = decryptMessage($message, $private_key);
+                array_push($messageArray, $message);
+            }
+        }
     }
 
     return $messageArray;
+}
+
+function decryptMessage($message, $private_key) {
+    $newMessage = [
+        receiver => $message['receiver'],
+        sender => $message['sender'],
+        body => rsa_decrypt($message['body'], $private_key)
+    ];
+    return $newMessage;
 }
 
 function renderTable() {
@@ -76,19 +77,25 @@ function renderMessages() {
     global $messageArray;
     for($i = 0; $i<count($messageArray); $i++) {
         $message = $messageArray[$i];
-//        var_dump($message);
-//        echo "Receiver: ";
-//        echo $message['receiver'];
-//        echo "User: ";
-//        echo $message['user'];
-        if ($message['receiver'] === $_SESSION['user']) {
-            echo '<tr>';
-            echo '<td>' . $message["sender"] . '</td>';
-            echo '<td id="' . $i . '"onclick="">' . $message["body"] . '</td>';
-            echo '</tr>';
-        }
+        echo '<tr>';
+        echo '<td>' . $message["sender"] . '</td>';
+        echo '<td id="' . $i . '"onclick="">' . $message["body"] . '</td>';
+        echo '</tr>';
     }
 }
+//---------------END FUNCTION DECLARATIONS-----------------
+
+
+session_start();
+
+//Get public and private keys
+$private_key = $_SESSION['privatekey'];
+$public_key = $_SESSION['publickey'];
+//Get the contents of the file
+$file = file_get_contents('messages.txt');
+//Retrieve the user's messages and store them in an array
+$messageArray = convertFileToMessageArray($file, $private_key);
+
 ?>
 
 <!DOCTYPE html>
@@ -98,6 +105,7 @@ function renderMessages() {
         <link rel="stylesheet" type="text/css" href="styles/viewPosts.css">
     </head>
     <body>
+        <h1>Inbox</h1>
         <div class="toolbar">
         	<button onclick="window.location = 'sendMessage.php'">Send Message</button>
             <button onclick="window.location = 'viewPosts.php'">View Posts</button>

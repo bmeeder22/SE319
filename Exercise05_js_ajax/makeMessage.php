@@ -42,31 +42,41 @@ session_start();
 $private_key = $_SESSION['privatekey'];
 $public_key = $_SESSION['publickey'];
 
-$file = file_get_contents('messages.txt');
+$file = file_get_contents('messages.txt'); //retrieve contents of file in JSON format
 
-$decipheredtext = rsa_decrypt($file, $private_key);
+$encryptedMessages = convertJSONtoArray($file); //transform JSON into an array of message objects
 
-$messages = convertJSONtoArray($decipheredtext);
-addMessageToFile($messages, $public_key);
+addMessageToFile($encryptedMessages, $public_key);
 
 function addMessageToFile($messages, $public_key) {
-    $message = [
-        'receiver' => $_GET['receiver'],
-        'sender' => $_SESSION['user'],
-        'body' => $_GET['body']
-    ];
+    // $myfile = fopen("messages.txt", "a");
+    global $file;
+    $encryptedText = rsa_encrypt($_GET['body'], $public_key);
 
-    array_push($messages, $message);
-    echo "Messages: ";
-    var_dump($messages);
-    $JSON = json_encode($messages);
+    $txt = $_GET['receiver'].'STRING-BREAK'.$_SESSION['user'].'STRING-BREAK'.$encryptedText."END-MESSAGE";
 
-    $encryptedtext = rsa_encrypt($JSON, $public_key);
+    $newFile = $file.$txt;
 
-    // echo "Encrypted text: "
-    // echo $encryptedtext
+    file_put_contents("messages.txt", $newFile);
+    // fclose($myfile);
 
-    file_put_contents('messages.txt', $encryptedtext);
+    // $message = [
+    //     'receiver' => $_GET['receiver'],
+    //     'sender' => $_SESSION['user'],
+    //     'body' => $encryptedText
+    // ];
+
+    // array_push($messages, $message); //add encrypted message to the array of message objects
+    // echo "Messages: ";
+    // echo "<br>";
+    // echo "<br>";
+    // echo "<br>";
+    // var_dump($messages);
+    // $JSON = json_encode($messages); //convert array of message objects back to JSON
+
+    // echo $JSON;
+
+    // file_put_contents('messages.txt', $JSON); //save JSON to file
 }
 
 function convertJSONtoArray($string) {
@@ -83,7 +93,7 @@ function convertJSONtoArray($string) {
 }
 ?>
 
-!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
