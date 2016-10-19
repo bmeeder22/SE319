@@ -3,6 +3,7 @@ session_start();
 
 $file = file_get_contents('posts.txt');
 $user_posts = convertJSONtoArray($file);
+$_SESSION['user_posts'] = $user_posts;
 
 function convertJSONtoArray($file) {
     $posts = json_decode($file);
@@ -23,7 +24,7 @@ function renderTable() {
 }
 
 function renderTableTitle() {
-    echo '<thead><tr><th class="text-left">By</th><th class="text-left">Post</th></tr></thead>';
+    echo '<thead><tr><th class="text-left">Post ID</th><th class="text-left">By</th><th class="text-left">Post</th></tr></thead>';
 }
 
 function renderPosts() {
@@ -31,8 +32,12 @@ function renderPosts() {
     for($i = 0; $i<count($user_posts); $i++) {
         $post = $user_posts[$i];
         echo '<tr>';
-        echo '<td onclick="">'.$post["name"].'</td>';
-        echo '<td onclick="console.log(\'test\')">'.$post["post"].'</td>';
+        echo '<td>'.$i.'</td>';
+        echo '<td>'.$post["name"].'</td>';
+        echo '<td id="'.$i.'"onclick="handleUpdatePost(this.id, &#39;'.$post["name"].'&#39;)">'.$post["post"].'</td>';
+        if(strcmp($_SESSION['user'], 'admin') == 0) {
+            echo '<td onclick="deletePost('.$i.')">Delete</td>';
+        }
         echo '</tr>';
     }
 }
@@ -45,6 +50,7 @@ function renderPosts() {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="styles/viewPosts.css">
         <script src="js/makePost.js"></script>
+        <script src="js/updatePosts.js"></script>
     </head>
     <body>
         <div class="toolbar">
@@ -52,14 +58,15 @@ function renderPosts() {
             <button onclick="window.location = 'inbox.php'">Inbox</button>
             <button onclick="window.location = 'logout.php'">Logout</button>
         </div>
-        <table>
+        <table id="postsTable">
             <?php renderTable(); ?>
         </table>
 
         <br>
-
-        <input id="newpost" type="text"/>
-        <button onclick="handleMakePost();">Make a post!</button>
+        <div id="addPost">
+            <input id="newpost" type="text"/>
+            <button id="submitNewPost" onclick="handleMakePost()">Make a post!</button>
+        </div>
 
     </body>
 </html>
