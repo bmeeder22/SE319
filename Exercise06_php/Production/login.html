@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        var handleLogin = function() {
+            var user = $('#username').val();
+            var pass = $('#password').val();
+
+            $.post('php/checkLogin.php',
+                {
+                    user: user,
+                    pass: pass
+                },
+                function(data) {
+                   if(data === "success") {
+                       window.location = "library.html";
+                   }
+                }
+            );
+        };
+    </script>
+</head>
+<body>
+<h1>Login</h1>
+<h4>Username</h4>
+<input id="username" type="text"/>
+<h4>Password</h4>
+<input id="password" type="text"/>
+<button onclick="handleLogin()">Login</button>
+<div id="result"></div>
+</body>
+</html>
