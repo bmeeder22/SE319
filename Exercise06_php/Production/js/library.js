@@ -4,11 +4,14 @@
 
 $(document).ready(function(){
     var lib = new Library();
+
+    //make function for adding books and set click on a button. lib.addBook
 });
 
 class Library {
     constructor() {
-        this.username = this.getURLParameter('user');
+        this.username = '';
+        $.post('php/getUserInfo.php', this.getUserInfo.bind(this));
 
         this.checkedOut = 0;
 
@@ -19,7 +22,6 @@ class Library {
 
         $.post('php/getBooks.php',this.importBooks.bind(this));
 
-        this.refreshCookies();
         this.render();
     }
 
@@ -56,19 +58,6 @@ class Library {
         );
 
         if(this.username == 'admin') this.renderBookAddOptions();
-    }
-
-    refreshCookies() {
-        document.cookie = "Art=" + this.art.toString();
-        document.cookie = "Science=" + this.science.toString();
-        document.cookie = "Sport=" + this.sport.toString();
-        document.cookie = "Literature=" + this.literature.toString();
-    }
-
-    getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
     }
 
     renderBookAddOptions() {
@@ -131,7 +120,7 @@ class Library {
     }
 
     handleBookClick(id) {
-        this.refreshCookies();
+
     }
 
     addBook() {
@@ -159,11 +148,11 @@ class Library {
         }
 
         this.render();
-        this.refreshCookies();
     }
 
-    getURLParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    getUserInfo(data) {
+        this.user = JSON.parse(data);
+        $('#username').text(this.user['username']);
     }
 }
 
@@ -183,12 +172,6 @@ class Shelf {
         this.label.style = "background-color:green";
     }
 
-    addBooks(titles) {
-        for(var i = 0; i<titles.length; i++) {
-            this.addBook(titles[i]);
-        }
-    }
-
     importBooks(books) {
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
@@ -204,10 +187,6 @@ class Shelf {
         this.books.push(new Book(title, this.subject + this.bookId ,this.click, ""));
         this.bookId++;
         document.cookie = this.subject + "=" + JSON.stringify(this.books);
-    }
-
-    toString() {
-        return JSON.stringify(this.books);
     }
 }
 
@@ -267,7 +246,6 @@ class Book {
 
     getUserInfo(data) {
         this.user = JSON.parse(data);
-        $('#username').text(this.user['username']);
     }
 
     checkIn() {
