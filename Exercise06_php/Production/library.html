@@ -10,9 +10,18 @@
         table, th, td {
             border: 1px solid black;
         }
+
+        .toolbar {
+            position:absolute;
+            top:0;
+            right:0;
+        }
     </style>
 </head>
 <body>
+<div class="toolbar">
+    <button onclick="window.location = 'php/logout.php'">Logout</button>
+</div>
 <table style="width:100%"></table>
 <div id="adminInputs"></div>
 <div id="adminInfo"></div>
