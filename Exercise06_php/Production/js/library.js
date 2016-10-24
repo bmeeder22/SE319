@@ -17,21 +17,24 @@ class Library {
         this.sport = new Shelf("Sport", this.handleBookClick.bind(this));
         this.literature = new Shelf("Literature", this.handleBookClick.bind(this));
 
-        // if(document.cookie === '') {
-            //add 20 books
-            this.art.addBooks(["R1", "B1", "R2", "B2", "B3", "R5", "B20"]);
-            this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
-            this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
-            this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
+        // this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
+        // this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
+        // this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
+        $.post('php/getBooks.php',this.importBooks.bind(this));
 
-            this.refreshCookies();
-        // }
-        // else {
-        //     this.art.importBooks(JSON.parse(this.getCookie("Art")));
-        //     this.science.importBooks(JSON.parse(this.getCookie("Science")));
-        //     this.sport.importBooks(JSON.parse(this.getCookie("Sport")));
-        //     this.literature.importBooks(JSON.parse(this.getCookie("Literature")));
-        // }
+        console.log(this.art);
+
+        this.refreshCookies();
+        this.render();
+    }
+
+    importBooks(data) {
+        data = JSON.parse(data);
+
+        this.art.importBooks(data['art']);
+        this.science.importBooks(data['science']);
+        this.sport.importBooks(data['sport']);
+        this.literature.importBooks(data['literature']);
 
         this.render();
     }
@@ -195,7 +198,7 @@ class Shelf {
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
 
-            var newBook = new Book(bookInfo.title, bookInfo.id, this.click, bookInfo.borrowedBy);
+            var newBook = new Book(bookInfo.name, bookInfo.id, this.click, bookInfo.borrowedBy);
             newBook.checkedOut = bookInfo.checkedOut;
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
@@ -219,6 +222,8 @@ class Book {
         this.borrowedBy = borrowedBy;
         this.title = title;
         this.id = id;
+        this.user="";
+        $.get('php/getUserInfo.php', this.getUserInfo.bind(this));
 
         this.HTML = this.render(title);
 
@@ -238,24 +243,26 @@ class Book {
     }
 
     handleClick() {
-        if(this.getURLParameter("user") == "admin") {
+        var username = this.user['user'];
+
+        if(username == "admin") {
             this.handleAdminClick();
             return;
         }
 
-        if(this.checkedOut && this.getURLParameter("user") != this.borrowedBy) {
+        if(this.checkedOut && username != this.borrowedBy) {
             return;
         }
 
         if(this.checkedOut) {
-            var num = $('.' + this.getURLParameter('user')).length-1;
+            var num = $('.' + username).length-1;
             console.log(num);
             if(num <= 2)
                 this.checkIn();
             else return;
         }
         else {
-            var num = $('.' + this.getURLParameter('user')).length+1;
+            var num = $('.' + username).length+1;
             console.log(num);
             if(num <= 2)
                 this.checkOut();
@@ -263,6 +270,10 @@ class Book {
         }
 
         this.click(this.id);
+    }
+
+    getUserInfo(data) {
+        this.user = JSON.parse(data);
     }
 
     checkIn() {
@@ -275,7 +286,7 @@ class Book {
     checkOut() {
         this.HTML.style = "background-color:red";
         this.checkedOut = true;
-        this.borrowedBy = this.getURLParameter("user");
+        this.borrowedBy = this.user['user'];
         this.HTML.className = this.borrowedBy;
     }
 
@@ -286,9 +297,5 @@ class Book {
         else {
             $('#adminInfo').html(this.title + " is on shelf " + this.id.substring(0,this.id.length-1));
         }
-    }
-
-    getURLParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
     }
 }
