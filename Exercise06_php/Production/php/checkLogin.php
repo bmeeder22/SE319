@@ -36,7 +36,7 @@ function checkUser() {
         exit();
     }
 
-    $user = mysqli_fetch_assoc($result);
+    $user = mysqli_fetch_array($result);
 
     session_start();
 

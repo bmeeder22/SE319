@@ -17,12 +17,7 @@ class Library {
         this.sport = new Shelf("Sport", this.handleBookClick.bind(this));
         this.literature = new Shelf("Literature", this.handleBookClick.bind(this));
 
-        // this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
-        // this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
-        // this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
         $.post('php/getBooks.php',this.importBooks.bind(this));
-
-        console.log(this.art);
 
         this.refreshCookies();
         this.render();
@@ -223,7 +218,7 @@ class Book {
         this.title = title;
         this.id = id;
         this.user="";
-        $.get('php/getUserInfo.php', this.getUserInfo.bind(this));
+        $.post('php/getUserInfo.php', this.getUserInfo.bind(this));
 
         this.HTML = this.render(title);
 
@@ -243,7 +238,7 @@ class Book {
     }
 
     handleClick() {
-        var username = this.user['user'];
+        var username = this.user['username'];
 
         if(username == "admin") {
             this.handleAdminClick();
@@ -256,14 +251,12 @@ class Book {
 
         if(this.checkedOut) {
             var num = $('.' + username).length-1;
-            console.log(num);
             if(num <= 2)
                 this.checkIn();
             else return;
         }
         else {
             var num = $('.' + username).length+1;
-            console.log(num);
             if(num <= 2)
                 this.checkOut();
             else return;
@@ -274,6 +267,7 @@ class Book {
 
     getUserInfo(data) {
         this.user = JSON.parse(data);
+        $('#username').text(this.user['username']);
     }
 
     checkIn() {
@@ -281,13 +275,17 @@ class Book {
         this.checkedOut = false;
         this.borrowedBy = "";
         this.HTML.className = "";
+
+        //SQL Call
     }
 
     checkOut() {
         this.HTML.style = "background-color:red";
         this.checkedOut = true;
-        this.borrowedBy = this.user['user'];
+        this.borrowedBy = this.user['username'];
         this.HTML.className = this.borrowedBy;
+
+        //SQL Call
     }
 
     handleAdminClick() {
