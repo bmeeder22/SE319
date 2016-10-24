@@ -42,7 +42,7 @@ function addUser() {
             VALUES (\"$user\", \"$pass\", \"$email\", \"$phone\", $librarian, \"$firstName\", \"$lastName\")";
 
     if ($link->query($sql) === TRUE) {
-        echo "New record created successfully";
+        header("Location: ../login.html");
     } else {
         echo "Error: " . $sql . "<br>" . $link->error;
     }
