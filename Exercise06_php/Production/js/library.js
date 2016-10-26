@@ -150,11 +150,11 @@ class Library {
         console.log("Title: " + bookInfo['book_title']);
         var availability = "";
         var checkOutButton = "";
-        if(bookInfo['availability'] == '0') { //Not available
+        if (bookInfo['availability'] == '0') { //Not available
             availability = "Checked Out";
         } else { //Available for checkout
             availability = "Available";
-            checkOutButton = "<button>Check Out</button>";
+            checkOutButton = "<button id='checkOutButton'>Check Out</button>";
         }
         var bookInfoDiv = "<div id='bookInfo'>" + 
             "<h2>Book Info:</h2>" + 
@@ -164,6 +164,12 @@ class Library {
             checkOutButton + "</div>";
 
         $("#bookInfo").replaceWith(bookInfoDiv);
+
+        //if the book is available for checkout, then add the click handler method to the checkout button
+        if (bookInfo['availability'] == '1') {
+            // console.log("Checkout Click Button Handler Set");
+            $("#checkOutButton").click( this.handleCheckoutClick.bind(this, bookInfo['book_id']));
+        }
     }
 
     addBook() {
@@ -196,6 +202,18 @@ class Library {
 
     getURLParameter(name) {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    handleCheckoutClick(bookId) {
+        console.log("User " + this.username + " wants to check out book with id " + bookId);
+        $.post("php/checkoutBook.php",
+            {
+                bookId: bookId,
+                username: this.username
+            },
+            function (data) {
+                console.log(data);
+            });
     }
 }
 
