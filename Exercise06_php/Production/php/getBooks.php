@@ -1,10 +1,10 @@
 <?php
 
-$user = 'root';
-$password = 'root';
-$db = 'Lab6';
-$host = 'localhost';
-$port = 8889;
+$user = 'dbu319t27';
+$password = 'cU$RaSp4';
+$db = 'db319t27';
+$host = 'mysql.cs.iastate.edu';
+$port = 3306;
 
 $link = mysqli_init();
 $success = mysqli_real_connect(
@@ -18,19 +18,19 @@ $success = mysqli_real_connect(
 
 $shelfs = [];
 
-$sql = "SELECT * FROM books WHERE shelf=1;";
+$sql = "SELECT * FROM books WHERE book_id in (SELECT book_id FROM shelves WHERE shelf_id = 1);";
 $result = $link->query($sql);
 $shelves['art'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$sql = "SELECT * FROM books WHERE shelf=2;";
+$sql = "SELECT * FROM books WHERE book_id in (SELECT book_id FROM shelves WHERE shelf_id = 2);";
 $result = $link->query($sql);
 $shelves['science'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$sql = "SELECT * FROM books WHERE shelf=3;";
+$sql = "SELECT * FROM books WHERE book_id in (SELECT book_id FROM shelves WHERE shelf_id = 3);";
 $result = $link->query($sql);
 $shelves['sport'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$sql = "SELECT * FROM books WHERE shelf=4;";
+$sql = "SELECT * FROM books WHERE book_id in (SELECT book_id FROM shelves WHERE shelf_id = 4);";
 $result = $link->query($sql);
 $shelf =
 $shelves['literature'] = mysqli_fetch_all($result, MYSQLI_ASSOC);

@@ -3,11 +3,11 @@
 session_unset();
 session_destroy();
 
-$user = 'root';
-$password = 'root';
-$db = 'Lab6';
-$host = 'localhost';
-$port = 8889;
+$user = 'dbu319t27';
+$password = 'cU$RaSp4';
+$db = 'db319t27';
+$host = 'mysql.cs.iastate.edu';
+$port = 3306;
 
 $link = mysqli_init();
 $success = mysqli_real_connect(
@@ -27,7 +27,7 @@ function checkUser() {
     $username = $_REQUEST['user'];
     $pass = md5($_REQUEST['pass']);
 
-    $sql = "SELECT * FROM users WHERE username = \"$username\" AND password=\"$pass\"";
+    $sql = "SELECT * FROM users WHERE username = \"".$username."\" AND password=\"".$pass."\"";
 
     $result = $link->query($sql);
 
@@ -36,11 +36,11 @@ function checkUser() {
         exit();
     }
 
-    $user = mysqli_fetch_array($result);
+    $user = mysqli_fetch_assoc($result);
 
     session_start();
 
-    $_SESSION = $user;
+    $_SESSION['user'] = $user;
 
     echo "success";
     exit();
