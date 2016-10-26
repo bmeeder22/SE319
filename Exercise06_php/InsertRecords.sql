@@ -4,9 +4,8 @@ LIMIT 0, 10000
 
 -- Date: 2016-10-25 19:38
 */
--- INSERT INTO `users` (`username`,`password`,`email`,`phone`,`librarian`,`first_name`,`last_name`) VALUES ('librarian','password','neig@test.gmail.com',1234567890,1,'Librarian','User');
--- INSERT INTO `users` (`username`,`password`,`email`,`phone`,`librarian`,`first_name`,`last_name`) VALUES ('neig','test','neig@test.gmail.com',1234567890,1,'Noah','Eigenfeld');
--- INSERT INTO `users` (`username`,`password`,`email`,`phone`,`librarian`,`first_name`,`last_name`) VALUES ('student','password','neig@test.gmail.com',1234567890,0,'Student','User');
+INSERT INTO `users` (`username`,`password`,`email`,`phone`,`librarian`,`first_name`,`last_name`) VALUES ('librarian','5f4dcc3b5aa765d61d8327deb882cf99','neig@test.gmail.com',1234567890,1,'Librarian','User');
+INSERT INTO `users` (`username`,`password`,`email`,`phone`,`librarian`,`first_name`,`last_name`) VALUES ('student','5f4dcc3b5aa765d61d8327deb882cf99','neig@test.gmail.com',1234567890,0,'Student','User');
 /*
 -- Query: select * from books
 LIMIT 0, 10000

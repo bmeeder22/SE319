@@ -143,7 +143,7 @@ class Library {
         {
             bookId: id
         }, function (data) {
-            console.log("data: " + data);
+            // console.log("data: " + data);
         });
     }
 
@@ -236,7 +236,6 @@ class Book {
         $.get('php/getUserInfo.php',
             this.getUserInfo.bind(this)
         );
-        console.log("user: " + this.user);
 
         this.HTML = this.render(title);
 
@@ -286,7 +285,6 @@ class Book {
     }
 
     getUserInfo(data) {
-        console.log("Data: " + data);
         this.user = JSON.parse(data);
     }
 
