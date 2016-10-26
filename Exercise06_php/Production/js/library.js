@@ -23,7 +23,7 @@ class Library {
         // this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
         $.post('php/getBooks.php',this.importBooks.bind(this));
 
-        console.log(this.art);
+        // console.log(this.art);
 
         this.refreshCookies();
         this.render();
@@ -203,8 +203,8 @@ class Shelf {
     }
 
     importBooks(books) {
-        console.log("Shelf: ")
-        console.log(books);
+        // console.log("Shelf: ")
+        // console.log(books);
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
 
@@ -286,6 +286,7 @@ class Book {
     }
 
     getUserInfo(data) {
+        console.log("Data: " + data);
         this.user = JSON.parse(data);
     }
 

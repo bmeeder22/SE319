@@ -28,5 +28,4 @@ if($result == null) {
 }
 
 $book = mysqli_fetch_assoc($result);
-echo "book info: ";
-var_dump($book);
+echo json_encode($book);

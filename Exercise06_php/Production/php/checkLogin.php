@@ -27,7 +27,7 @@ function checkUser() {
     $username = $_REQUEST['user'];
     $pass = md5($_REQUEST['pass']);
 
-    $sql = "SELECT * FROM users WHERE username = \"$username\" AND password=\"$pass\"";
+    $sql = "SELECT * FROM users WHERE username = \"".$username."\" AND password=\"".$pass."\"";
 
     $result = $link->query($sql);
 
