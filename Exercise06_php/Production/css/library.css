@@ -1,0 +1,13 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+.toolbar {
+    position:absolute;
+    top:0;
+    right:0;
+    display: block;
+}
+table {
+    width:100%
+}
