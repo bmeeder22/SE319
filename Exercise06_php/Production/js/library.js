@@ -4,14 +4,12 @@
 
 $(document).ready(function(){
     var lib = new Library();
-
-    //make function for adding books and set click on a button. lib.addBook
 });
 
 class Library {
     constructor() {
-        this.username = '';
-        $.post('php/getUserInfo.php', this.getUserInfo.bind(this));
+        this.username = this.getURLParameter('user');
+        console.log("Username: " + this.username);
 
         this.checkedOut = 0;
 
@@ -20,8 +18,14 @@ class Library {
         this.sport = new Shelf("Sport", this.handleBookClick.bind(this));
         this.literature = new Shelf("Literature", this.handleBookClick.bind(this));
 
+        // this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
+        // this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
+        // this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
         $.post('php/getBooks.php',this.importBooks.bind(this));
 
+        console.log(this.art);
+
+        this.refreshCookies();
         this.render();
     }
 
@@ -58,6 +62,19 @@ class Library {
         );
 
         if(this.username == 'admin') this.renderBookAddOptions();
+    }
+
+    refreshCookies() {
+        document.cookie = "Art=" + this.art.toString();
+        document.cookie = "Science=" + this.science.toString();
+        document.cookie = "Sport=" + this.sport.toString();
+        document.cookie = "Literature=" + this.literature.toString();
+    }
+
+    getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
     }
 
     renderBookAddOptions() {
@@ -120,7 +137,14 @@ class Library {
     }
 
     handleBookClick(id) {
-
+        this.refreshCookies();
+        console.log("Getting info for book " + id);
+        $.post("php/getBookInfo.php",
+        {
+            bookId: id
+        }, function (data) {
+            console.log("data: " + data);
+        });
     }
 
     addBook() {
@@ -148,11 +172,11 @@ class Library {
         }
 
         this.render();
+        this.refreshCookies();
     }
 
-    getUserInfo(data) {
-        this.user = JSON.parse(data);
-        $('#username').text(this.user['username']);
+    getURLParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
     }
 }
 
@@ -172,11 +196,19 @@ class Shelf {
         this.label.style = "background-color:green";
     }
 
+    addBooks(titles) {
+        for(var i = 0; i<titles.length; i++) {
+            this.addBook(titles[i]);
+        }
+    }
+
     importBooks(books) {
+        console.log("Shelf: ")
+        console.log(books);
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
 
-            var newBook = new Book(bookInfo.name, bookInfo.id, this.click, bookInfo.borrowedBy);
+            var newBook = new Book(bookInfo.book_title, bookInfo.book_id, this.click, bookInfo.borrowedBy);
             newBook.checkedOut = bookInfo.checkedOut;
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
@@ -188,16 +220,23 @@ class Shelf {
         this.bookId++;
         document.cookie = this.subject + "=" + JSON.stringify(this.books);
     }
+
+    toString() {
+        return JSON.stringify(this.books);
+    }
 }
 
 class Book {
-    constructor(title, id ,click, borrowedBy) {
+    constructor(title, id ,click) {
         this.checkedOut = false;
-        this.borrowedBy = borrowedBy;
+        this.borrowedBy = "";
         this.title = title;
         this.id = id;
         this.user="";
-        $.post('php/getUserInfo.php', this.getUserInfo.bind(this));
+        $.get('php/getUserInfo.php',
+            this.getUserInfo.bind(this)
+        );
+        console.log("user: " + this.user);
 
         this.HTML = this.render(title);
 
@@ -217,7 +256,7 @@ class Book {
     }
 
     handleClick() {
-        var username = this.user['username'];
+        var username = this.user['user'];
 
         if(username == "admin") {
             this.handleAdminClick();
@@ -230,12 +269,14 @@ class Book {
 
         if(this.checkedOut) {
             var num = $('.' + username).length-1;
+            console.log(num);
             if(num <= 2)
                 this.checkIn();
             else return;
         }
         else {
             var num = $('.' + username).length+1;
+            console.log(num);
             if(num <= 2)
                 this.checkOut();
             else return;
@@ -253,17 +294,13 @@ class Book {
         this.checkedOut = false;
         this.borrowedBy = "";
         this.HTML.className = "";
-
-        //SQL Call
     }
 
     checkOut() {
         this.HTML.style = "background-color:red";
         this.checkedOut = true;
-        this.borrowedBy = this.user['username'];
+        this.borrowedBy = this.user['user'];
         this.HTML.className = this.borrowedBy;
-
-        //SQL Call
     }
 
     handleAdminClick() {

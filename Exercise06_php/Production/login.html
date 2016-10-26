@@ -16,10 +16,7 @@
                 },
                 function(data) {
                    if(data === "success") {
-                       window.location = "library.html";
-                   }
-                   else {
-                       console.log(data);
+                       window.location = "library.html?user=" + user;
                    }
                 }
             );

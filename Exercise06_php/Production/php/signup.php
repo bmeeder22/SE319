@@ -7,11 +7,11 @@ addUser();
 exit();
 
 function addUser() {
-    $user = 'root';
-    $password = 'root';
-    $db = 'Lab6';
-    $host = 'localhost';
-    $port = 8889;
+    $user = 'dbu319t27';
+    $password = 'cU$RaSp4';
+    $db = 'db319t27';
+    $host = 'mysql.cs.iastate.edu';
+    $port = 3306;
 
     $link = mysqli_init();
     $success = mysqli_real_connect(
@@ -42,7 +42,7 @@ function addUser() {
             VALUES (\"$user\", \"$pass\", \"$email\", \"$phone\", $librarian, \"$firstName\", \"$lastName\")";
 
     if ($link->query($sql) === TRUE) {
-        header("Location: ../login.html");
+        echo "New record created successfully";
     } else {
         echo "Error: " . $sql . "<br>" . $link->error;
     }
