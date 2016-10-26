@@ -138,13 +138,32 @@ class Library {
 
     handleBookClick(id) {
         this.refreshCookies();
-        console.log("Getting info for book " + id);
         $.post("php/getBookInfo.php",
         {
             bookId: id
-        }, function (data) {
-            // console.log("data: " + data);
-        });
+        }, this.renderBookInfo.bind(this));
+    }
+
+    renderBookInfo(data) {
+        var bookInfo = JSON.parse(data);
+        console.log(bookInfo);
+        console.log("Title: " + bookInfo['book_title']);
+        var availability = "";
+        var checkOutButton = "";
+        if(bookInfo['availability'] == '0') { //Not available
+            availability = "Checked Out";
+        } else { //Available for checkout
+            availability = "Available";
+            checkOutButton = "<button>Check Out</button>";
+        }
+        var bookInfoDiv = "<div id='bookInfo'>" + 
+            "<h2>Book Info:</h2>" + 
+            "<h3>" + bookInfo['book_title'] + "</h3>" + 
+            "<p>" + bookInfo['author'] + "</p>" + 
+            "<p>" + availability + "</p>" + 
+            checkOutButton + "</div>";
+
+        $("#bookInfo").replaceWith(bookInfoDiv);
     }
 
     addBook() {
@@ -186,7 +205,6 @@ class Shelf {
         this.subject = subject;
         this.renderLabel();
         this.books = [];
-
         this.click = click;
     }
 
@@ -196,6 +214,7 @@ class Shelf {
         this.label.style = "background-color:green";
     }
 
+    //TODO: This method will need to add author
     addBooks(titles) {
         for(var i = 0; i<titles.length; i++) {
             this.addBook(titles[i]);
@@ -207,16 +226,15 @@ class Shelf {
         // console.log(books);
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
-
-            var newBook = new Book(bookInfo.book_title, bookInfo.book_id, this.click, bookInfo.borrowedBy);
+            var newBook = new Book(bookInfo.book_title, bookInfo.author, bookInfo.book_id, this.click, bookInfo.borrowedBy);
             newBook.checkedOut = bookInfo.checkedOut;
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
         }
     }
 
-    addBook(title) {
-        this.books.push(new Book(title, this.subject + this.bookId ,this.click, ""));
+    addBook(title, author) {
+        this.books.push(new Book(title, author, this.subject + this.bookId ,this.click, ""));
         this.bookId++;
         document.cookie = this.subject + "=" + JSON.stringify(this.books);
     }
@@ -227,10 +245,11 @@ class Shelf {
 }
 
 class Book {
-    constructor(title, id ,click) {
+    constructor(title, author, id ,click) {
         this.checkedOut = false;
         this.borrowedBy = "";
         this.title = title;
+        this.author = author;
         this.id = id;
         this.user="";
         $.get('php/getUserInfo.php',
@@ -252,6 +271,29 @@ class Book {
         HTML.className = this.borrowedBy;
 
         return HTML;
+    }
+
+    // renderInfo() {
+    //     var availability = "";
+    //     var checkOutButton = "";
+    //     if(this.checkedOut) {
+    //         availability = "Checked Out";
+    //     } else {
+    //         availability = "Available";
+    //         checkOutButton = "<button>Check Out</button>";
+    //     }
+    //     var bookInfo = "<div id='bookInfo'>" + 
+    //         "<h2>Book Info:</h2>" + 
+    //         "<h3>" + this.title + "</h3>" + 
+    //         "<p>" + this.author + "</p>" + 
+    //         "<p>" + availability + "</p>" + 
+    //         checkOutButton + "</div>";
+
+    //     $("#bookInfo").replaceWith(bookInfo);
+    // }
+
+    getBookAvailability() {
+
     }
 
     handleClick() {
@@ -280,6 +322,8 @@ class Book {
                 this.checkOut();
             else return;
         }
+
+        // this.renderInfo();
 
         this.click(this.id);
     }
