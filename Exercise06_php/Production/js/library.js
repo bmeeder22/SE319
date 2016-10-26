@@ -150,8 +150,10 @@ class Library {
         console.log("Title: " + bookInfo['book_title']);
         var availability = "";
         var checkOutButton = "";
+        var returnButton = "";
         if (bookInfo['availability'] == '0') { //Not available
             availability = "Checked Out";
+            returnButton = "<button id='returnButton'>Return Book</button>";
         } else { //Available for checkout
             availability = "Available";
             checkOutButton = "<button id='checkOutButton'>Check Out</button>";
@@ -161,7 +163,7 @@ class Library {
             "<h3>" + bookInfo['book_title'] + "</h3>" + 
             "<p>" + bookInfo['author'] + "</p>" + 
             "<p>" + availability + "</p>" + 
-            checkOutButton + "</div>";
+            checkOutButton + returnButton + "</div>";
 
         $("#bookInfo").replaceWith(bookInfoDiv);
 
@@ -169,6 +171,8 @@ class Library {
         if (bookInfo['availability'] == '1') {
             // console.log("Checkout Click Button Handler Set");
             $("#checkOutButton").click( this.handleCheckoutClick.bind(this, bookInfo['book_id']));
+        } else { //if the book is checked out, the user can return it
+            $("#returnButton").click( this.handleReturnBookClick.bind(this, bookInfo['book_id']));
         }
     }
 
@@ -211,8 +215,19 @@ class Library {
                 bookId: bookId,
                 username: this.username
             },
-            function (data) {
-                console.log(data);
+            function (success) {
+                console.log(success);
+            });
+    }
+
+    handleReturnBookClick(bookId) {
+        console.log("User " + this.username + " wants to return book with id " + bookId);
+        $.post("php/returnBook.php",
+            {
+                bookId: bookId
+            },
+            function (success) {
+                console.log(success);
             });
     }
 }
