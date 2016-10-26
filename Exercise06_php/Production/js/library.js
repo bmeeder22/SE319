@@ -214,7 +214,6 @@ class Shelf {
         this.label.style = "background-color:green";
     }
 
-    //TODO: This method will need to add author
     addBooks(titles) {
         for(var i = 0; i<titles.length; i++) {
             this.addBook(titles[i]);
@@ -226,7 +225,7 @@ class Shelf {
         // console.log(books);
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
-            var newBook = new Book(bookInfo.book_title, bookInfo.author, bookInfo.book_id, this.click, bookInfo.borrowedBy);
+            var newBook = new Book(bookInfo.book_title, bookInfo.book_id, this.click, bookInfo.borrowedBy);
             newBook.checkedOut = bookInfo.checkedOut;
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
@@ -245,11 +244,10 @@ class Shelf {
 }
 
 class Book {
-    constructor(title, author, id ,click) {
+    constructor(title, id ,click) {
         this.checkedOut = false;
         this.borrowedBy = "";
         this.title = title;
-        this.author = author;
         this.id = id;
         this.user="";
         $.get('php/getUserInfo.php',
@@ -271,29 +269,6 @@ class Book {
         HTML.className = this.borrowedBy;
 
         return HTML;
-    }
-
-    // renderInfo() {
-    //     var availability = "";
-    //     var checkOutButton = "";
-    //     if(this.checkedOut) {
-    //         availability = "Checked Out";
-    //     } else {
-    //         availability = "Available";
-    //         checkOutButton = "<button>Check Out</button>";
-    //     }
-    //     var bookInfo = "<div id='bookInfo'>" + 
-    //         "<h2>Book Info:</h2>" + 
-    //         "<h3>" + this.title + "</h3>" + 
-    //         "<p>" + this.author + "</p>" + 
-    //         "<p>" + availability + "</p>" + 
-    //         checkOutButton + "</div>";
-
-    //     $("#bookInfo").replaceWith(bookInfo);
-    // }
-
-    getBookAvailability() {
-
     }
 
     handleClick() {
@@ -322,8 +297,6 @@ class Book {
                 this.checkOut();
             else return;
         }
-
-        // this.renderInfo();
 
         this.click(this.id);
     }
