@@ -147,13 +147,18 @@ class Library {
     renderBookInfo(data) {
         var bookInfo = JSON.parse(data);
         console.log(bookInfo);
-        console.log("Title: " + bookInfo['book_title']);
+        console.log("this.username: "  + this.username);
+        // console.log("Title: " + bookInfo['book_title']);
         var availability = "";
         var checkOutButton = "";
         var returnButton = "";
         if (bookInfo['availability'] == '0') { //Not available
+            var borrower = this.getBorrower(bookInfo['book_id']);
+            console.log("Borrower is " + borrower);
             availability = "Checked Out";
-            returnButton = "<button id='returnButton'>Return Book</button>";
+            if (bookInfo['username'] == this.username) { //if the user is the one who checked out the book, they can return it
+                returnButton = "<button id='returnButton'>Return Book</button>";
+            }
         } else { //Available for checkout
             availability = "Available";
             checkOutButton = "<button id='checkOutButton'>Check Out</button>";
@@ -171,7 +176,7 @@ class Library {
         if (bookInfo['availability'] == '1') {
             // console.log("Checkout Click Button Handler Set");
             $("#checkOutButton").click( this.handleCheckoutClick.bind(this, bookInfo['book_id']));
-        } else { //if the book is checked out, the user can return it
+        } else if (bookInfo['username'] == this.username) { //if the book is checked out, the user can return it
             $("#returnButton").click( this.handleReturnBookClick.bind(this, bookInfo['book_id']));
         }
     }
@@ -229,6 +234,20 @@ class Library {
             function (success) {
                 console.log(success);
             });
+    }
+
+    getBorrower(bookId) {
+        console.log("Getting user who borrowed book " + bookId);
+        var borrower = "Template";
+        $.post("php/getBorrower.php", 
+            {
+                bookId: bookId
+            },
+            function(username) {
+                console.log(username);
+                borrower = username;
+        });
+        return borrower;
     }
 }
 

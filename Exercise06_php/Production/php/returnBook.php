@@ -27,7 +27,7 @@ $updateBookAvailability = FALSE;
 
 $sql = "UPDATE loan_history
 SET returned_date = CURDATE()
-WHERE book_id = ".$bookId." AND returned_date = NULL";
+WHERE book_id = ".$bookId." AND returned_date IS NULL";
 
 if ($link->query($sql) === TRUE) {
 	$updatedLoanHistory = TRUE;
