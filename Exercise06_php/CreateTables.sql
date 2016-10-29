@@ -16,6 +16,7 @@ create table books (
 	book_title varchar(255),
     author varchar(255),
     availability tinyint,
+    deleted bool default false,
     primary key(book_id)
 );
 
