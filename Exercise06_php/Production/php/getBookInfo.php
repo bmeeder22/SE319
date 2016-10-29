@@ -18,7 +18,19 @@ $success = mysqli_real_connect(
     $port
 );
 
-$sql = "SELECT * FROM books WHERE book_id = \"".$bookId."\"";
+//A really sloppy sql query to get the info for the selected book and any umreturned loans
+$sql = "SELECT A.book_id, book_title, author, availability, username, due_date, returned_date
+FROM ((SELECT *
+	FROM books
+    WHERE book_id = ".$bookId.")
+    AS A
+    LEFT JOIN
+    (SELECT *
+    FROM loan_history
+    WHERE book_id = ".$bookId."
+    AND returned_date IS NULL)
+    AS B
+    ON A.book_id = B.book_id);";
 
 $result = $link->query($sql);
 
