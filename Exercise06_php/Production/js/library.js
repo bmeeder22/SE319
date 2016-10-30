@@ -47,7 +47,7 @@ class Library {
     }
 
     render() {
-        var table = $('table');
+        var table = $('#booksTable');
         table.empty();
 
         var subjectRow = document.createElement('tr');
@@ -67,7 +67,10 @@ class Library {
             }
         );
 
-        if(this.isLibrarian) this.renderBookAddOptions();
+        if(this.isLibrarian) {
+            this.renderBookAddOptions();
+            this.renderLoanHistory();
+        }
     }
 
     refreshCookies() {
@@ -111,6 +114,72 @@ class Library {
         div.append(shelfSport);
         div.append(shelfLit);
         div.append(submit);
+    }
+
+    renderLoanHistory() {
+        console.log("Displaying loan history.");
+
+        var label = $("#loanHistoryLabel");
+        label.replaceWith("<h3>Loan History</h3>");
+
+        $.post("php/getLoanHistory.php", function(data) {
+            var history = JSON.parse(data);
+            console.log(history.length);
+
+            var div = $("#loanHistory");       
+
+            var subjectRow = document.createElement('tr');
+
+            var usernameLabel = document.createElement('th');
+            var titleLabel = document.createElement('th');
+            var authorLabel = document.createElement('th');
+            var dueDateLabel = document.createElement('th');
+            var returnedDateLabel = document.createElement('th');
+
+            usernameLabel.innerHTML = "Username";
+            titleLabel.innerHTML = "Title";
+            authorLabel.innerHTML = "Author";
+            dueDateLabel.innerHTML = "Due Date";
+            returnedDateLabel.innerHTML = "Returned Date";
+
+            subjectRow.appendChild(usernameLabel);
+            subjectRow.appendChild(titleLabel);
+            subjectRow.appendChild(authorLabel);
+            subjectRow.appendChild(dueDateLabel);
+            subjectRow.appendChild(returnedDateLabel);
+
+            div.append(subjectRow);
+
+            var numLoans = history.length;
+            for (var i = 0; i < numLoans; i++) {
+                var row = document.createElement('tr');
+
+                var rowUsername = document.createElement('td');
+                var rowTitle = document.createElement('td');
+                var rowAuthor = document.createElement('td');
+                var rowDueDate = document.createElement('td');
+                var rowReturnedDate = document.createElement('td');
+
+                rowUsername.innerHTML = history[i]['username'];
+                rowTitle.innerHTML = history[i]['book_title'];
+                rowAuthor.innerHTML = history[i]['author'];
+                rowDueDate.innerHTML = history[i]['due_date'];
+
+                if (history[i]['returned_date'] == null) {
+                    rowReturnedDate.innerHTML = "Checked out";
+                } else {
+                    rowReturnedDate.innerHTML = history[i]['returned_date'];
+                }
+
+                row.appendChild(rowUsername);
+                row.appendChild(rowTitle);
+                row.appendChild(rowAuthor);
+                row.appendChild(rowDueDate);
+                row.appendChild(rowReturnedDate);
+
+                div.append(row);
+            }
+        });
     }
 
     addBook() {
