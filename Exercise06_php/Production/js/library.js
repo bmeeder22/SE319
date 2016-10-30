@@ -216,13 +216,12 @@ class Library {
 
     renderBookInfo(data) {
         var bookInfo = JSON.parse(data);
-        // console.log(bookInfo);
-        // console.log("this.username: "  + this.username);
-        // console.log("Title: " + bookInfo['book_title']);
+
         var availability = "";
         var checkOutButton = "";
         var returnButton = "";
         var deleteButton = "";
+
         //Checkout/Return button
         if (bookInfo['availability'] == '0') { //Not available
             availability = "Checked Out";
@@ -233,10 +232,12 @@ class Library {
             availability = "Available";
             checkOutButton = "<button id='checkOutButton'>Check Out</button>";
         }
+
         //Librarians can delete books
         if (this.isLibrarian) {
             deleteButton = "<button id='deleteBookButton'>Delete Book</button>";
         }
+
         var bookInfoDiv = "<div id='bookInfo'>" + 
             "<h2>Book Info:</h2>" + 
             "<h3>" + bookInfo['book_title'] + "</h3>" + 
@@ -253,16 +254,14 @@ class Library {
         } else if (bookInfo['username'] == this.username) { //if the book is checked out, the user can return it
             $("#returnButton").click( this.handleReturnBookClick.bind(this, bookInfo['book_id']));
         }
+
         if (this.isLibrarian) {
             $("#deleteBookButton").click( this.handleDeleteBookClick.bind(this, bookInfo['book_id']));
         }
-
-        this.render();
-        this.refreshCookies();
     }
 
     handleDeleteBookClick(bookId) {
-        console.log("Deleting book with id " + bookId);
+        // console.log("Deleting book with id " + bookId);
         $.post("php/deleteBook.php",
         {
             bookId: bookId
