@@ -1,36 +1,9 @@
 <?php
+include 'mysqlConnect.php';
 
 $bookId = $_POST['bookId'];
 
-$user = 'dbu319t27';
-$password = 'cU$RaSp4';
-$db = 'db319t27';
-$host = 'mysql.cs.iastate.edu';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-    $link,
-    $host,
-    $user,
-    $password,
-    $db,
-    $port
-);
-
-//A really sloppy sql query to get the info for the selected book and any umreturned loans
-$sql = "SELECT A.book_id, book_title, author, availability, username, due_date, returned_date
-FROM ((SELECT *
-	FROM books
-    WHERE book_id = ".$bookId.")
-    AS A
-    LEFT JOIN
-    (SELECT *
-    FROM loan_history
-    WHERE book_id = ".$bookId."
-    AND returned_date IS NULL)
-    AS B
-    ON A.book_id = B.book_id);";
+$sql = "SELECT * FROM books WHERE book_id=" . $bookId;
 
 $result = $link->query($sql);
 
@@ -40,4 +13,22 @@ if($result == null) {
 }
 
 $book = mysqli_fetch_assoc($result);
+
+if($book['availability'] == 0){
+    $sql = "SELECT books.*, loan_history.username
+    FROM books
+    INNER JOIN loan_history
+    ON books.book_id=loan_history.book_id
+    WHERE loan_history.returned_date IS NULL AND books.book_id=" . $bookId;
+
+    $result = $link->query($sql);
+
+    if($result == null) {
+        echo "Something went wrong! Book info not found.";
+        exit();
+    }
+
+    $book = mysqli_fetch_assoc($result);
+}
+
 echo json_encode($book);

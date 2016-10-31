@@ -4,21 +4,7 @@ session_start();
 
 $bookId = $_POST['bookId'];
 
-$user = 'dbu319t27';
-$password = 'cU$RaSp4';
-$db = 'db319t27';
-$host = 'mysql.cs.iastate.edu';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-    $link,
-    $host,
-    $user,
-    $password,
-    $db,
-    $port
-);
+include 'mysqlConnect.php';
 
 $updatedLoanHistory = FALSE;
 $updateBookAvailability = FALSE;

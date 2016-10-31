@@ -1,20 +1,6 @@
 <?php
 
-$user = 'dbu319t27';
-$password = 'cU$RaSp4';
-$db = 'db319t27';
-$host = 'mysql.cs.iastate.edu';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-    $link,
-    $host,
-    $user,
-    $password,
-    $db,
-    $port
-);
+include 'mysqlConnect.php';
 
 $shelfs = [];
 
@@ -32,7 +18,6 @@ $shelves['sport'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $sql = "SELECT * FROM books WHERE book_id in (SELECT book_id FROM shelves WHERE shelf_id = 4) AND deleted=FALSE;";
 $result = $link->query($sql);
-$shelf =
 $shelves['literature'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 echo json_encode($shelves);
