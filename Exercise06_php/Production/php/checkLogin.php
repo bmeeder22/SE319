@@ -3,21 +3,7 @@
 session_unset();
 session_destroy();
 
-$user = 'dbu319t27';
-$password = 'cU$RaSp4';
-$db = 'db319t27';
-$host = 'mysql.cs.iastate.edu';
-$port = 3306;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-    $link,
-    $host,
-    $user,
-    $password,
-    $db,
-    $port
-);
+include 'mysqlConnect.php';
 
 checkUser();
 

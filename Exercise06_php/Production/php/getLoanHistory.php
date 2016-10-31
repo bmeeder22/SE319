@@ -1,30 +1,14 @@
 <?php
 
-$user = 'dbu319t27';
-$password = 'cU$RaSp4';
-$db = 'db319t27';
-$host = 'mysql.cs.iastate.edu';
-$port = 3306;
+include 'mysqlConnect.php';
 
-$link = mysqli_init();
-$success = mysqli_real_connect(
-    $link,
-    $host,
-    $user,
-    $password,
-    $db,
-    $port
-);
+$bookId = $_POST['bookId'];
 
-$sql = "SELECT username, A.book_id, due_date, returned_date, book_title, author
-	FROM
-	(SELECT *
-	FROM loan_history) AS A
-	JOIN
-	(SELECT *
-	FROM books) AS B
-	ON A.book_id = B.book_id
-	ORDER BY due_date DESC";
+$sql = "SELECT *
+FROM loan_history
+INNER JOIN books
+ON loan_history.book_id=books.book_id
+WHERE loan_history.book_id=" . $bookId;
 
 $result = $link->query($sql);
 

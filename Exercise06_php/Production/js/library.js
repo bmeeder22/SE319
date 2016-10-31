@@ -8,24 +8,12 @@ $(document).ready(function(){
 
 class Library {
     constructor() {
-        $.get('php/getUserInfo.php', this.setUserInfo.bind(this));
-        this.username = this.getURLParameter('user');
+        $.ajax({
+            url: 'php/getUserInfo.php',
+            success:  this.setUserInfo.bind(this),
+            async: false
+        });
 
-        this.checkedOut = 0;
-
-        this.art = new Shelf("Art", this.handleBookClick.bind(this));
-        this.science = new Shelf("Science", this.handleBookClick.bind(this));
-        this.sport = new Shelf("Sport", this.handleBookClick.bind(this));
-        this.literature = new Shelf("Literature", this.handleBookClick.bind(this));
-
-        // this.science.addBooks(["B6", "B7", "B8", "B9", "B10", "B19"]);
-        // this.sport.addBooks(["R3", "B11", "B12", "B4", "B5", "R4"]);
-        // this.literature.addBooks(["B13", "B14", "B15", "B16", "B17", "B18"]);
-        $.post('php/getBooks.php',this.importBooks.bind(this));
-
-        // console.log(this.art);
-
-        this.refreshCookies();
         this.render();
     }
 
@@ -33,6 +21,7 @@ class Library {
         var userInfo = JSON.parse(data);
 
         this.isLibrarian = userInfo['librarian'];
+        this.username = userInfo['username'];
     }
 
     importBooks(data) {
@@ -42,11 +31,20 @@ class Library {
         this.science.importBooks(data['science']);
         this.sport.importBooks(data['sport']);
         this.literature.importBooks(data['literature']);
-
-        this.render();
     }
 
     render() {
+        this.art = new Shelf("Art", this.handleBookClick.bind(this));
+        this.science = new Shelf("Science", this.handleBookClick.bind(this));
+        this.sport = new Shelf("Sport", this.handleBookClick.bind(this));
+        this.literature = new Shelf("Literature", this.handleBookClick.bind(this));
+
+        $.ajax({
+            url: 'php/getBooks.php',
+            success:  this.importBooks.bind(this),
+            async: false
+        });
+
         var table = $('#booksTable');
         table.empty();
 
@@ -67,23 +65,9 @@ class Library {
             }
         );
 
-        if(this.isLibrarian) {
+        if(this.isLibrarian == 1) {
             this.renderBookAddOptions();
-            this.renderLoanHistory();
         }
-    }
-
-    refreshCookies() {
-        document.cookie = "Art=" + this.art.toString();
-        document.cookie = "Science=" + this.science.toString();
-        document.cookie = "Sport=" + this.sport.toString();
-        document.cookie = "Literature=" + this.literature.toString();
-    }
-
-    getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
     }
 
     renderBookAddOptions() {
@@ -116,17 +100,16 @@ class Library {
         div.append(submit);
     }
 
-    renderLoanHistory() {
-        console.log("Displaying loan history.");
-
+    renderLoanHistory(bookId) {
+        console.log("renderLoanHistory");
         var label = $("#loanHistoryLabel");
         label.replaceWith("<h3>Loan History</h3>");
 
-        $.post("php/getLoanHistory.php", function(data) {
+        $.post("php/getLoanHistory.php", {bookId: bookId} ,function(data) {
             var history = JSON.parse(data);
-            console.log(history.length);
 
-            var div = $("#loanHistory");       
+            var div = $("#loanHistory");
+            div.empty();
 
             var subjectRow = document.createElement('tr');
 
@@ -195,42 +178,28 @@ class Library {
 
         var newShelf = '';
         if (shelfArt.is(":checked")) {
-            console.log("Adding to shelf art");
-            this.art.addBook(newTitle);
             shelfId = 1;
         } else if (shelfScience.is(":checked")) {
-            console.log("Adding to shelf science");
-            this.science.addBook(newTitle);
             shelfId = 2;
         } else if (shelfSport.is(":checked")) {
-            console.log("Adding to shelf sport");
-            this.sport.addBook(newTitle);
             shelfId = 3;
         } else {
-            console.log("Adding to shelf literature");
-            this.literature.addBook(newTitle);
             shelfId = 4;
         }
 
-        console.log("Title: " + newTitle);
-        console.log("Author: " + author);
-        console.log("ShelfID: " + shelfId);
-
-        $.post("php/addBook.php",
-        {
-            title: newTitle,
-            author: author,
-            shelfId: shelfId
-        }, function (success) {
-            if (success == "success") {
-                console.log("Book added successfully");
-            }
+        $.ajax({
+            url: "php/addBook.php",
+            method: "POST",
+            data: {
+                title: newTitle,
+                author: author,
+                shelfId: shelfId
+            },
+            async: false
         });
 
-        bookTitle.val('');
-
         this.render();
-        this.refreshCookies();
+        bookTitle.val('');
     }
 
     renderShelves(shelves) {
@@ -276,7 +245,6 @@ class Library {
     }
 
     handleBookClick(id) {
-        this.refreshCookies();
         $.post("php/getBookInfo.php",
         {
             bookId: id
@@ -284,16 +252,29 @@ class Library {
     }
 
     renderBookInfo(data) {
+        if(!data.startsWith('{')) {
+            var bookInfoDiv = "<div id='bookInfo'>" + data + "</div>";
+            $("#bookInfo").replaceWith(bookInfoDiv);
+            return;
+        }
+
         var bookInfo = JSON.parse(data);
 
         var availability = "";
         var checkOutButton = "";
         var returnButton = "";
         var deleteButton = "";
+        var loanHistoryButton = "";
+
+        if(this.isLibrarian == 1)
+            loanHistoryButton = "<button id='loanHistoryButton'>View Loan History</button>";
 
         //Checkout/Return button
         if (bookInfo['availability'] == '0') { //Not available
             availability = "Checked Out";
+            console.log(bookInfo['username']);
+            console.log(this.username);
+
             if (bookInfo['username'] == this.username) { //if the user is the one who checked out the book, they can return it
                 returnButton = "<button id='returnButton'>Return Book</button>";
             }
@@ -303,7 +284,7 @@ class Library {
         }
 
         //Librarians can delete books
-        if (this.isLibrarian) {
+        if(this.isLibrarian == 1) {
             deleteButton = "<button id='deleteBookButton'>Delete Book</button>";
         }
 
@@ -312,73 +293,70 @@ class Library {
             "<h3>" + bookInfo['book_title'] + "</h3>" + 
             "<p>" + bookInfo['author'] + "</p>" + 
             "<p>" + availability + "</p>" + 
-            checkOutButton + returnButton + deleteButton + "</div>";
+            checkOutButton + returnButton + deleteButton + loanHistoryButton + "</div>";
 
         $("#bookInfo").replaceWith(bookInfoDiv);
 
         //if the book is available for checkout, then add the click handler method to the checkout button
         if (bookInfo['availability'] == '1') {
-            // console.log("Checkout Click Button Handler Set");
             $("#checkOutButton").click( this.handleCheckoutClick.bind(this, bookInfo['book_id']));
         } else if (bookInfo['username'] == this.username) { //if the book is checked out, the user can return it
             $("#returnButton").click( this.handleReturnBookClick.bind(this, bookInfo['book_id']));
         }
 
-        if (this.isLibrarian) {
-            $("#deleteBookButton").click( this.handleDeleteBookClick.bind(this, bookInfo['book_id']));
+        if (this.isLibrarian == 1) {
+            $("#deleteBookButton").click(this.handleDeleteBookClick.bind(this, bookInfo['book_id']));
+            $("#loanHistoryButton").click(this.renderLoanHistory.bind(this, bookInfo['book_id']));
         }
     }
 
     handleDeleteBookClick(bookId) {
-        // console.log("Deleting book with id " + bookId);
-        $.post("php/deleteBook.php",
-        {
-            bookId: bookId
-        },
-        function (success) {
-            if (success == "success") {
-                console.log("Book deleted successfully.");
-            } else {
-                console.log(success);
-            }
+        $.ajax({
+            url: "php/deleteBook.php",
+            method: "POST",
+            data: {bookId: bookId},
+            async: false
         });
-    }
 
-    getURLParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+        this.render();
+        $("#bookInfo").replaceWith('');
     }
 
     handleCheckoutClick(bookId) {
-        console.log("User " + this.username + " wants to check out book with id " + bookId);
-        $.post("php/checkoutBook.php",
-            {
+        $.ajax({
+            url: "php/checkoutBook.php",
+            method: "POST",
+            data: {
                 bookId: bookId,
                 username: this.username
             },
-            function (success) {
-                console.log(success);
-            });
+            async: false
+        });
+
+        this.render();
+        $("#bookInfo").replaceWith('');
     }
 
     handleReturnBookClick(bookId) {
-        console.log("User " + this.username + " wants to return book with id " + bookId);
-        $.post("php/returnBook.php",
-            {
-                bookId: bookId
+        $.ajax({
+            url: "php/returnBook.php",
+            method: "POST",
+            data: {
+                bookId: bookId,
             },
-            function (success) {
-                console.log(success);
-            });
+            async: false
+        });
+
+        this.render();
     }
 }
 
 class Shelf {
     constructor(subject, click) {
-        this.bookId = 0;
         this.subject = subject;
-        this.renderLabel();
-        this.books = [];
         this.click = click;
+
+        this.renderLabel();
     }
 
     renderLabel() {
@@ -387,15 +365,9 @@ class Shelf {
         this.label.style = "background-color:green";
     }
 
-    addBooks(titles) {
-        for(var i = 0; i<titles.length; i++) {
-            this.addBook(titles[i]);
-        }
-    }
-
     importBooks(books) {
-        // console.log("Shelf: ")
-        // console.log(books);
+        if(books == null) return;
+
         for(var i = 0; i<books.length; i++) {
             var bookInfo = books[i];
             var newBook = new Book(bookInfo.book_title, bookInfo.book_id, this.click, bookInfo.borrowedBy);
@@ -403,16 +375,6 @@ class Shelf {
             if(bookInfo.checkedOut) newBook.HTML.style = "background-color:red";
             this.books.push(newBook);
         }
-    }
-
-    addBook(title, author) {
-        this.books.push(new Book(title, author, this.subject + this.bookId ,this.click, ""));
-        this.bookId++;
-        document.cookie = this.subject + "=" + JSON.stringify(this.books);
-    }
-
-    toString() {
-        return JSON.stringify(this.books);
     }
 }
 
@@ -428,8 +390,13 @@ class Book {
         );
 
         this.HTML = this.render(title);
-
         this.click = click;
+
+        $.post({
+            url: 'php/getBookInfo.php',
+            data: {bookId: id},
+            success: this.getBookInfo.bind(this)
+        });
     }
 
     render(title) {
@@ -445,32 +412,6 @@ class Book {
     }
 
     handleClick() {
-        var username = this.user['user'];
-
-        if(username == "admin") {
-            this.handleAdminClick();
-            return;
-        }
-
-        if(this.checkedOut && username != this.borrowedBy) {
-            return;
-        }
-
-        if(this.checkedOut) {
-            var num = $('.' + username).length-1;
-            console.log(num);
-            if(num <= 2)
-                this.checkIn();
-            else return;
-        }
-        else {
-            var num = $('.' + username).length+1;
-            console.log(num);
-            if(num <= 2)
-                this.checkOut();
-            else return;
-        }
-
         this.click(this.id);
     }
 
@@ -478,26 +419,9 @@ class Book {
         this.user = JSON.parse(data);
     }
 
-    checkIn() {
-        this.HTML.style = "background-color:white";
-        this.checkedOut = false;
-        this.borrowedBy = "";
-        this.HTML.className = "";
-    }
-
-    checkOut() {
-        this.HTML.style = "background-color:red";
-        this.checkedOut = true;
-        this.borrowedBy = this.user['user'];
-        this.HTML.className = this.borrowedBy;
-    }
-
-    handleAdminClick() {
-        if(this.checkedOut) {
-            $('#adminInfo').html(this.title + " is on shelf " + this.id.substring(0,this.id.length-1) + " and is checked out by " + this.borrowedBy);
-        }
-        else {
-            $('#adminInfo').html(this.title + " is on shelf " + this.id.substring(0,this.id.length-1));
-        }
+    getBookInfo(data) {
+        var data = JSON.parse(data);
+        var availability = data['availability'];
+        if(availability == 0) this.HTML.style = "background-color:red";
     }
 }
