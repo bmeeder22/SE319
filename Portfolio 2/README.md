@@ -4,6 +4,10 @@ Portfolio 2
 
 By: Ben Meeder and Noah Eigenfeld
 
+Laravel Documentation: https://laravel.com/docs/5.3
+
+path: cd "/Users/benjaminmeeder/Documents/School/SE 319/portfolio 2/app"
+
 Connect to AWS: 
 1. chmod 400 Portfolio2.pem
 2. ssh -i "Portfolio2.pem" ec2-user@ec2-35-161-211-206.us-west-2.compute.amazonaws.com
@@ -31,3 +35,11 @@ TODO
 -[ ] Seed database
 -[ ] copy to docker container
 -[ ] upload to AWS
+-[ ] Docker writeup
+-[ ] Database seed writeup
+-[ ] Laravel writeup
+-[ ] Amazon AWS writeup
+
+updating .env vars
+1. update
+2. php artisan config:cache
