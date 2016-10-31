@@ -13,16 +13,15 @@
 		<meta name="keywords" content="" />
 		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
 
-		<script src="<?php echo e(asset('js/jquery.min.js')); ?>"></script>
-		<script src="<?php echo e(asset('js/skel.min.js')); ?>"></script>
-		<script src="<?php echo e(asset('js/skel-layers.min.js')); ?>"></script>
-		<script src="<?php echo e(asset('js/init.js')); ?>"></script>
-
-		<noscript>
-			<link rel="stylesheet" href="css/skel.css" /> 
-			<link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>" />
-			<link rel="stylesheet" href="css/style-xlarge.css" /> 
-		</noscript>
+        <script src="<?php echo e(asset("js/jquery.min.js")); ?>" >     </script>
+        <script src="<?php echo e(asset("js/skel.min.js")); ?>" >       </script>
+        <script src="<?php echo e(asset("js/skel-layers.min.js")); ?>" ></script>
+        <script src="<?php echo e(asset("js/init.js")); ?>" >           </script>
+        <noscript>
+            <link rel="stylesheet" href="<?php echo e(asset('css/skel.css')); ?>" />
+            <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>" />
+            <link rel="stylesheet" href="<?php echo e(asset('css/style-xlarge.css')); ?>" />
+        </noscript>
 	</head>
 	<body class="landing">
 
