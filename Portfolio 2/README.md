@@ -20,9 +20,16 @@ Kitematic setup
 5. ????
 6. Profit
 
+Server Setup in docker
+php artisan cache:clear && php artisan config:cache
+php artisan serve --host 0.0.0.0 --port 8000
+
 cpy to docker
 docker cp foo.txt mycontainer:/foo.txt local->container
 docker cp mycontainer:/foo.txt foo.txt container->local
+
+attach terminal to docker
+sudo docker exec -i -t  /bin/bash
 
 Run app locally
 1. terminal session and go to the app directory
