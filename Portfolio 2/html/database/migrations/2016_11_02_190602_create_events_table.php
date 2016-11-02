@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration {
+class CreateEventsTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -13,12 +14,12 @@ class CreateEventsTable extends Migration {
     public function up()
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->increments('id')->unsigned()->primary();
-            $table->string('name')->after('id');
-            $table->string('author')->after('name');
-            $table->dateTime('date')->after('author');
-            $table->integer('attendees')->after('date');
-            $table->integer('location')->after('attendees')->unsigned();
+            $table->increments('id');
+            $table->string('name');
+            $table->string('author');
+            $table->dateTime('date');
+            $table->integer('attendees');
+            $table->integer('location')->unsigned();
 
             $table->foreign('location')->references('id')->on('colleges');
         });
