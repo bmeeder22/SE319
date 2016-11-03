@@ -60,26 +60,26 @@
 										</tr>
 									</thead>
 									<tbody>
-										@if($product[0] != "null")
+										@if($product[0] != "null" || sizeof($product) == 0)
 											@for ($i = 0; $i < sizeof($product); $i++)
-											<?php $count = 0; ?>
-											@if($today == $product[0]['date'])
-												{{$count +=1}}
-												<tr>
-													<td>{{$product[$i]['name']}}</td>
-													<td><a href = "http://maps.google.com/?q={{$product[$i]['address']}}" target="_blank">{{$product[$i]['address']}}</a></td>
-													<td>{{$product[$i]['time']}}</td>
-													<td>{{$product[$i]['descrip']}}</td>
-													<td>{{$product[$i]['attends']}} people have Hit Up</td>
-													<td><a href="{{ URL::route('party', [ 'id' => $product[$i]['id'] ] ) }}" class="button small">Hit Up</a></td>
-												</tr>
-											@endif
+                                                <?php $count=0; ?>
+                                                @if($today == substr($product[$i]['date'], 0, 10))
+                                                    <?php $count+=1; ?>
+                                                    <tr>
+                                                        <td>{{$product[$i]['event_name']}}</td>
+                                                        <td><a href = "http://maps.google.com/?q={{$product[$i]['address']}}" target="_blank">{{$product[$i]['address']}}</a></td>
+                                                        <td>{{$product[$i]['date']}}</td>
+                                                        <td>{{$product[$i]['descrip']}}</td>
+                                                        <td>{{$product[$i]['attendees']}} people have Hit Up</td>
+                                                        <td><a href="{{route('party',['id'=> $product[$i]['event_id']])}}" class="button small">Hit Up</a></td>
+                                                    </tr>
+                                                @endif
 											@endfor
-											@if($count == 0)
-												<tr>
-													<td colspan="5">No Data Available In The Table</td>
-												</tr>
-											@endif
+                                            @if($count == 0)
+                                                <tr>
+                                                    <td colspan="5">No Data Available In The Table</td>
+                                                </tr>
+                                            @endif
 										@else
 											<tr>
 												<td colspan="5">No Data Available In The Table</td>
@@ -99,27 +99,24 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
 										@if($product[0] != "null")
 											@for ($i = 0; $i < sizeof($product); $i++)
-											@if($product[$i]['date'] > $today)
+											@if(substr($product[$i]['date'], 0, 10) > $today)
 												<tr>
-													<td>{{$product[$i]['name']}}</td>
+													<td>{{$product[$i]['event_name']}}</td>
 													<td><a href = "http://maps.google.com/?q={{$product[$i]['address']}}" target="_blank">{{$product[$i]['address']}}</a></td>
-													<td>{{$product[$i]['time']}}</td>
+													<td>{{$product[$i]['date']}}</td>
 													<td>{{$product[$i]['descrip']}}</td>
-													<td>{{$product[$i]['attends']}} people have Hit Up</td>
-													<td><a href="{{ URL::route('party', [ 'id' => $product[$i]['id'] ] ) }}" class="button small">Hit Up</a></td>
+													<td>{{$product[$i]['attendees']}} people have Hit Up</td>
+													<td><a href="{{route('party',['id'=> $product[$i]['event_id']])}}" class="button small">Hit Up</a></td>
 												</tr>
 											@endif
 											@endfor
-
 										@else
 											<tr>
 												<td colspan="5">No Data Available In The Table</td>
 											</tr>
 										@endif
-										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -135,19 +132,16 @@
 					</header>
 				</div>
 				<div class="container 50%">
-					{!! Form::open(['url' => 'test']) !!}
+					{!! Form::open(['route' => 'create']) !!}
 						<div class="row uniform">
 							<div class="6u 12u$(small)">
-								<!--<input name="name" id="name" value="" placeholder="Name" type="text">-->
-								{!! Form::text('name', null, ['placeholder' => 'Name', 'id'=>"name"]) !!}
+								{!! Form::text('name', null, ['placeholder' => 'Event Name', 'id'=>"name"]) !!}
 							</div>
 							<div class="6u$ 12u$(small)">
-								<!--<input name="address" id="address" value="" placeholder="address" type="text">-->
 								{!! Form::text('address', null, ['placeholder' => 'Address']) !!}
 							</div>
 							
 							<div class="3u 12u$(small)">
-								<!--<label> Date and Time:</label>-->
 								{!! Form::label('Date and Time:') !!}
 							</div>
 							<div class="6u 12u$(small)">
@@ -155,18 +149,15 @@
 								<!--{!! Form::text('date', null, ['placeholder' => '10/15/2015', 'type'=>"date", 'id'=>"date"]) !!}-->
 							</div>
 							<div class="3u 12u$(small)">
-								<!--<input name="time" id="time" value="20:00", placeholder="Time", type="time">-->
 								{!! Form::text('time', null, ['value="20:00",' => 'Time', 'type'=>"time"]) !!}
 								<input type="hidden" name="colid" value= {{$id}}>
 							</div>
 							<div class="12u$">
-								<!--<textarea name="description" id="description" placeholder="Description" rows="4"></textarea>-->
 								{!! Form::textarea('description', null, ['placeholder' => 'Description', 'rows'=>"4"]) !!}
 							</div>
 							
 							<div class="12u$">
 								<ul class="actions">
-									<!--<li><input value="Submit" class="special big" type="submit"></li>-->
 									{!! Form::submit('Submit', ['class' => "special big"]) !!}
 
 								</ul>

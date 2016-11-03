@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 
 class PagesController extends Controller
 {
@@ -19,14 +22,35 @@ class PagesController extends Controller
     function elements() {
     	return view('elements');
     }
+
     function test() {
     	return view('test');
+    }
+
+    function create(Request $request) {
+        $name = $request->input('name');
+        $address = $request->input('address');
+        $date  = $request->input('date');
+        $time  = $request->input('time');
+        $descrip = $request->input('description');
+        $input = $request->all();
+
+        $datetime = $date . ' ' . $time. ':00';
+
+        $id = DB::select("SELECT id FROM colleges WHERE abbrev=?",[$input['colid']])[0]->id;
+
+        DB::insert("
+INSERT INTO `events` (`event_name`, `address`, `descrip`, `date`, `attendees`, `location`)
+VALUES(?, ?, ?, ?, 0, ?);", [$name, $address, $descrip, $datetime, $id]);
+
+        $this->updateDates();
+
+        return back();
     }
 
     function college($id) {
     	$data['id']=$id;
     	global $college;
-        $this->updateDates();
     	if($id == $college[0]) {
     		$data['name'] = 'University of Minnesota';
     		$data['image'] = 'http://www.fabuloussavers.com/new_wallpaper/University_Of_Minnesota_Desktop_Wallpaper_freecomputerdesktopwallpaper_1600.jpg';
@@ -56,15 +80,14 @@ class PagesController extends Controller
     }
 
     function hit($id) {
-//        DB::table('Parties')->where('id', $id)->increment('attends', 1);
-        //return Redirect::back()->with('message','Operation Successful !');
-        return view('party');
-        //\DB::table('Parties')->increment('attends', 1, ['id' => $id]);
+        DB::table('events')->where('event_id', $id)->increment('attendees', 1);
+        return back();
     }
 
     function updateDates() {
-        $today = date("Y-m-d");
-//        DB::table('Parties')->where('date', '<', $today)->delete();
+        $time = date("Y-m-d H:i:s");
+        DB::table('events')->where('date', '<', $time)->delete();
+//        DB::delete("DELETE * FROM events WHERE `date`<?", [$time]);
     }
 
     function store() {

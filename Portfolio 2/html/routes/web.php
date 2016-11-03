@@ -26,8 +26,8 @@ Route::get('elements', ['as' => 'elements', 'uses' => 'PagesController@elements'
 
 Route::get('/college/{id}', ['as'=>'college', 'uses' => 'PagesController@college']);
 
-Route::get('/test', 'PagesController@test');
+Route::post('/create', 'PagesController@create')->name('create');
 
-Route::get('/party/{id}', ['as' => 'party', 'uses' => 'PagesController@hit']);
+Route::get('/party/{id}', 'PagesController@hit')->name('party');
 
 Route::post('/test', ['as' => 'store', 'uses' => 'PagesController@store']);

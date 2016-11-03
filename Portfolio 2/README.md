@@ -37,13 +37,15 @@ sudo docker exec -i -t  /bin/bash
 3. go to http://localhost:8000
 
 #TODO
--[ ] Schema php artisan migrate
+-[x] Schema php artisan migrate
+-[ ] College page working
 -[ ] Hit working
--[ ] Seed database
--[ ] copy to docker container
+-[ ] Add events
+-[x] Seed database
+-[x] copy to docker container
 -[ ] upload to AWS
 -[ ] Docker writeup
--[ ] Database seed writeup
+-[ ] Database migrate/seed writeup
 -[ ] Laravel writeup
 -[ ] Amazon AWS writeup
 
