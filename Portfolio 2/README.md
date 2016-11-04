@@ -38,14 +38,14 @@ sudo docker exec -i -t  /bin/bash
 
 #TODO
 -[x] Schema php artisan migrate
--[ ] College page working
--[ ] Hit working
--[ ] Add events
+-[x] College page working
+-[x] Hit working
+-[x] Add events
 -[x] Seed database
 -[x] copy to docker container
 -[ ] upload to AWS
 -[ ] Docker writeup
--[ ] Database migrate/seed writeup
+-[ ] Database seed writeup
 -[ ] Laravel writeup
 -[ ] Amazon AWS writeup
 

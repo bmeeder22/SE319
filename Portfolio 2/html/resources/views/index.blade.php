@@ -90,7 +90,7 @@
 						<div class="4u 12u$(medium)">
 							<section class="box">
 								<a href="{{ URL::route('college',['id' => 'UMN']) }}"><i class="icon big rounded color6 fa-university"></i></a>
-								<h3><a href="{{ URL::route('college',['id' => 'UMN']) }}">University of Minnesota</a></h3>
+								<h3><a href="{{ URL::route('college',['id' => 'UMN']) }}">University of</br> Minnesota</a></h3>
 							</section>
 						</div>
 						<div class="4u 12u$(medium)">

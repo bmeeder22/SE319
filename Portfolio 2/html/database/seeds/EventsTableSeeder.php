@@ -12,7 +12,7 @@ class EventsTableSeeder extends Seeder
     public function run()
     {
         DB::table('events')->insert([
-        'name' => 'party1',
+        'event_name' => 'party1',
         'address' => '1236 Lincoln Way Ames IA 50014',
         'descrip' => 'TEST',
         'date' => '2016-11-5 00:00:00',
@@ -20,7 +20,7 @@ class EventsTableSeeder extends Seeder
         'location' => 1,
     ]);
         DB::table('events')->insert([
-            'name' => 'party2',
+            'event_name' => 'party2',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -28,7 +28,7 @@ class EventsTableSeeder extends Seeder
             'location' => 1,
         ]);
         DB::table('events')->insert([
-            'name' => 'party3',
+            'event_name' => 'party3',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -36,7 +36,7 @@ class EventsTableSeeder extends Seeder
             'location' => 1,
         ]);
         DB::table('events')->insert([
-            'name' => 'party1',
+            'event_name' => 'party1',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -44,7 +44,7 @@ class EventsTableSeeder extends Seeder
             'location' => 2,
         ]);
         DB::table('events')->insert([
-            'name' => 'party2',
+            'event_name' => 'party2',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -52,7 +52,7 @@ class EventsTableSeeder extends Seeder
             'location' => 2,
         ]);
         DB::table('events')->insert([
-            'name' => 'party3',
+            'event_name' => 'party3',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -60,7 +60,7 @@ class EventsTableSeeder extends Seeder
             'location' => 2,
         ]);
         DB::table('events')->insert([
-            'name' => 'party1',
+            'event_name' => 'party1',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -68,7 +68,7 @@ class EventsTableSeeder extends Seeder
             'location' => 3,
         ]);
         DB::table('events')->insert([
-            'name' => 'party2',
+            'event_name' => 'party2',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',
@@ -76,7 +76,7 @@ class EventsTableSeeder extends Seeder
             'location' => 3,
         ]);
         DB::table('events')->insert([
-            'name' => 'party3',
+            'event_name' => 'party3',
             'address' => '1236 Lincoln Way Ames IA 50014',
             'descrip' => 'TEST',
             'date' => '2016-11-5 00:00:00',

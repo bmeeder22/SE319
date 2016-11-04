@@ -27,6 +27,8 @@ class CreateCollegesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('colleges');
+        Schema::table('colleges', function (Blueprint $table) {
+            Schema::dropIfExists('colleges');
+        });
     }
 }
