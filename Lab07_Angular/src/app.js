@@ -8,6 +8,10 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         controller: "librarianView",
         templateUrl: "librarian.html"
     });
+    $routeProvider.when("/undergrad", {
+        controller: "undergradView",
+        templateUrl: "undergrad.html"
+    });
 })
 .controller('indexController', function($scope) {
 })
@@ -21,6 +25,11 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         if ($scope.username == "admin" && $scope.password == "admin") {
             console.log("User is admin");
             $location.path("/librarian");
+        } else if ($scope.username[0] == 'U') {
+            console.log("User is an undergraduate");
+            $location.path("/undergrad");
+        } else {
+            alert("Username or password were incorrect.");
         }
     }
 })
