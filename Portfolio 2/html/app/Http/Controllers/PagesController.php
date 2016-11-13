@@ -40,8 +40,8 @@ class PagesController extends Controller
         $id = DB::select("SELECT id FROM colleges WHERE abbrev=?",[$input['colid']])[0]->id;
 
         DB::insert("
-INSERT INTO `events` (`event_name`, `address`, `descrip`, `date`, `attendees`, `location`)
-VALUES(?, ?, ?, ?, 0, ?);", [$name, $address, $descrip, $datetime, $id]);
+        INSERT INTO `events` (`event_name`, `address`, `descrip`, `date`, `attendees`, `location`)
+        VALUES(?, ?, ?, ?, 0, ?);", [$name, $address, $descrip, $datetime, $id]);
 
         $this->updateDates();
 
@@ -87,15 +87,5 @@ VALUES(?, ?, ?, ?, 0, ?);", [$name, $address, $descrip, $datetime, $id]);
     function updateDates() {
         $time = date("Y-m-d H:i:s");
         DB::table('events')->where('date', '<', $time)->delete();
-//        DB::delete("DELETE * FROM events WHERE `date`<?", [$time]);
-    }
-
-    function store() {
-//        $input = Request::all();
-//
-//        DB::table('Parties')->insertGetId(
-//    [ 'name' => $input['name'], 'address' => $input['address'], 'colid' => $input['colid'], 'date' => $input['date'], 'time' => $input['time'], 'descrip' => $input['description'], 'attends' => 1 ]
-//);
-//        return redirect()->route('college', $input['colid']);
     }
 }

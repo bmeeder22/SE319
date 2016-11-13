@@ -109,50 +109,6 @@
 				</div>
 			</section>
 			</div>
-		<!-- Two -->
-		<!--
-			<section id="two" class="wrapper style2 special">
-				<div class="container">
-					<header class="major">
-						<h2>Throw an Event here!</h2>
-						<p>Input time, and address, we take care of the rest!</p>
-					</header>
-					<section class="profiles">
-						<div class="row">
-							<section class="3u 6u(medium) 12u$(xsmall) profile">
-								<img src="images/profile_placeholder.gif" alt="" />
-								<h4>Lorem ipsum</h4>
-								<p>Lorem ipsum dolor</p>
-							</section>
-							<section class="3u 6u$(medium) 12u$(xsmall) profile">
-								<img src="images/profile_placeholder.gif" alt="" />
-								<h4>Voluptatem dolores</h4>
-								<p>Ullam nihil repudi</p>
-							</section>
-							<section class="3u 6u(medium) 12u$(xsmall) profile">
-								<img src="images/profile_placeholder.gif" alt="" />
-								<h4>Doloremque quo</h4>
-								<p>Harum corrupti quia</p>
-							</section>
-							<section class="3u$ 6u$(medium) 12u$(xsmall) profile">
-								<img src="images/profile_placeholder.gif" alt="" />
-								<h4>Voluptatem dicta</h4>
-								<p>Et natus sapiente</p>
-							</section>
-						</div>
-					</section>
-					<footer>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam dolore illum, temporibus veritatis eligendi, aliquam, dolor enim itaque veniam aut eaque sequi qui quia vitae pariatur repudiandae ab dignissimos ex!</p>
-						<ul class="actions">
-							<li>
-								<a href="#" class="button big">Lorem ipsum dolor sit</a>
-							</li>
-						</ul>
-					</footer>
-				</div>
-			</section>
-		-->
-		<!-- Three -->
 			<section id="three" class="wrapper style3 special">
 				<div class="container">
 					<header class="major">
@@ -161,24 +117,36 @@
 					</header>
 				</div>
 				<div class="container 50%">
-					<form action="#" method="post">
-						<div class="row uniform">
-							<div class="6u 12u$(small)">
-								<input name="name" id="name" value="" placeholder="Name" type="text">
-							</div>
-							<div class="6u$ 12u$(small)">
-								<input name="email" id="email" value="" placeholder="Email" type="email">
-							</div>
-							<div class="12u$">
-								<textarea name="message" id="message" placeholder="Message" rows="6"></textarea>
-							</div>
-							<div class="12u$">
-								<ul class="actions">
-									<li><input value="Send Message" class="special big" type="submit"></li>
-								</ul>
-							</div>
+					{!! Form::open(['route' => 'create']) !!}
+					<div class="row uniform">
+						<div class="6u 12u$(small)">
+							{!! Form::text('name', null, ['placeholder' => 'Event Name', 'id'=>"name"]) !!}
 						</div>
-					</form>
+						<div class="6u$ 12u$(small)">
+							{!! Form::text('address', null, ['placeholder' => 'Address']) !!}
+						</div>
+						<div class="3u 12u$(small)">
+							{!! Form::label('Date and Time:') !!}
+						</div>
+						<div class="6u 12u$(small)">
+							<input name="date" id="date" value= "date", placeholder="10/15/2015", type="date">
+						<!--{!! Form::text('date', null, ['placeholder' => '10/15/2015', 'type'=>"date", 'id'=>"date"]) !!}-->
+						</div>
+						<div class="3u 12u$(small)">
+							{!! Form::text('time', null, ['value="20:00",' => 'Time', 'type'=>"time"]) !!}
+						</div>
+						<div class="12u$">
+                            {!! Form::select('colid', ['UMN' => 'UMN', 'ISU' => 'ISU', 'NDSU' => 'NDSU']) !!}
+                            <br>
+							{!! Form::textarea('description', null, ['placeholder' => 'Description', 'rows'=>"4"]) !!}
+						</div>
+						<div class="12u$">
+							<ul class="actions">
+								{!! Form::submit('Submit', ['class' => "special big"]) !!}
+							</ul>
+						</div>
+					</div>
+					{!! Form::close() !!}
 				</div>
 			</section>
 

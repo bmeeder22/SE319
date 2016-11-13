@@ -1,0 +1,1 @@
+docker run -p 8000:80 -i -t 44364f5177b4 /bin/bash

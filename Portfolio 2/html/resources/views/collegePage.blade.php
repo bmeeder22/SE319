@@ -99,6 +99,8 @@
 										</tr>
 									</thead>
 									<tbody>
+                                        <?php $today = date('Y-m-d'); ?>
+                                        {{$today}}
 										@if($product[0] != "null")
 											@for ($i = 0; $i < sizeof($product); $i++)
 											@if(substr($product[$i]['date'], 0, 10) > $today)
@@ -159,7 +161,6 @@
 							<div class="12u$">
 								<ul class="actions">
 									{!! Form::submit('Submit', ['class' => "special big"]) !!}
-
 								</ul>
 							</div>
 						</div>
