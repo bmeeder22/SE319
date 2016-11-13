@@ -15,6 +15,9 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 })
 .controller('indexController', function($scope) {
 })
+
+//----------------------LOGIN-------------------------
+
 .controller('loginController', function($scope, $location) {
     $scope.name = "Login";
     $scope.username = "";
@@ -33,6 +36,9 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         }
     }
 })
+
+//----------------------LIBRARIAN-------------------------
+
 .controller('librarianController', function($scope, $http) {
     $scope.name = "Librarian";
     $scope.username = "admin";
@@ -57,8 +63,42 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         $scope.selectedBook = book;
     }
 
+    $scope.saveShelves = function() {
+        var jsonShelves = angular.toJson($scope.shelves);
+        console.log("JSON shelves: " + jsonShelves);
+        $.post("saveBookData.php",
+            {
+                shelves: jsonShelves
+            },
+            function(data) {
+                console.log(data);
+        });
+    }
+
+    $scope.addBook = function(bookName, bookShelf, bookType) {
+        console.log("Adding book: " + bookName + " of type " + bookType + " to shelf " + bookShelf);
+        var isReference = "Ordinary";
+        if (bookType) {
+            isReference = "Reference";
+        }
+        var newBook = {
+            "bookName" : bookName,
+            "bookType" : isReference,
+            "borrowedBy" : "N/A",
+            "presesnt" : "1"
+        }
+
+        var shelfLocation = $scope.shelves[bookShelf].length;
+        $scope.shelves[bookShelf][shelfLocation] = newBook;
+
+        $scope.saveShelves();
+    }
+
     $scope.fetchData();
 })
+
+//----------------------UNDERGRAD-------------------------
+
 .controller('undergradController', function($scope, $http) {
     $scope.name = "undergrad";
 
