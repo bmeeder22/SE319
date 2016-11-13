@@ -36,17 +36,25 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 .controller('librarianController', function($scope, $http) {
     $scope.name = "Librarian";
     $scope.username = "admin";
+    $scope.selectedBook = {
+        "bookName" : "No book selected",
+        "bookType" : "N/A",
+        "borrowedBy" : "N/A"
+    }
 
     $scope.fetchData = function() {
         console.log("Fetching Data...");
         $http.get('bookdata.json').
         then(function(response) {
             $scope.shelves = response.data;
-            console.log($scope.shelves);
         }, function() {
             $scope.data = "error";
             console.log(response.data)
         });
+    }
+
+    $scope.getBookDetails = function(book) {
+        $scope.selectedBook = book;
     }
 
     $scope.fetchData();
@@ -54,16 +62,29 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 .controller('undergradController', function($scope, $http) {
     $scope.name = "undergrad";
 
+    $scope.selectedBook = {
+        "bookName" : "No book selected",
+        "bookType" : "N/A",
+        "borrowedBy" : "N/A"
+    }
+
     $scope.fetchData = function() {
         console.log("Fetching Data...");
         $http.get('bookdata.json').
         then(function(response) {
             $scope.shelves = response.data;
-            console.log($scope.shelves);
         }, function() {
             $scope.data = "error";
             console.log(response.data)
         });
+    }
+
+    $scope.getBookDetails = function(book) {
+        $scope.selectedBook = book;
+    }
+
+    $scope.checkOutBook = function(book) {
+        console.log("Checking out " + book["bookName"]);
     }
 
     $scope.fetchData();

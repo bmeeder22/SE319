@@ -1,20 +1,28 @@
 <h2>Undergraduate View</h2>
 
 <style>
-th, td{
+th {
 	border: 1px solid black;
 }
 </style>
 
-<table> 
+<table style="border: 1px solid black; margin: 5px"> 
 <th> <h2>Shelf Literature</h2></th> <th> <h2>Shelf Science</h2></th> <th> <h2>Shelf Sport</h2></th> <th> <h2>Shelf Art</h2></th>
 <tr> 
   <td ng-repeat="shelf in shelves">
   	<table>
-  		<tr ng-repeat="book in shelf">
-  			<td>{{book["bookName"]}}</td>
+  		<tr ng-repeat="book in shelf" style="border: 1px solid black">
+  			<td ng-click="getBookDetails(book)" style="border: 1px solid black">{{book["bookName"]}}</td>
   		</tr>
   	</table>
   </td> 
 </tr>
 </table>
+
+<div id="bookDetails" style="border: 1px solid black; padding:5px; margin: 5px">
+	<h3>Book Details</h3>
+	<p>Title: {{selectedBook["bookName"]}}</p>
+	<p>Type: {{selectedBook["bookType"]}}</p>
+	<p>Borrowed by {{selectedBook["borrowedBy"]}}</p>
+	<button ng-click="checkOutBook(selectedBook)">Check Out</button>
+</div>
