@@ -5,11 +5,11 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         templateUrl: "login.html"
     });
     $routeProvider.when("/librarian", {
-        controller: "librarianView",
+        controller: "librarianController",
         templateUrl: "librarian.html"
     });
     $routeProvider.when("/undergrad", {
-        controller: "undergradView",
+        controller: "undergradController",
         templateUrl: "undergrad.html"
     });
 })
@@ -29,12 +29,43 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
             console.log("User is an undergraduate");
             $location.path("/undergrad");
         } else {
-            alert("Username or password were incorrect.");
+            alert("Username and/or password was incorrect.");
         }
     }
 })
-.controller('librarianController', function($scope) {
+.controller('librarianController', function($scope, $http) {
     $scope.name = "Librarian";
     $scope.username = "admin";
+
+    $scope.fetchData = function() {
+        console.log("Fetching Data...");
+        $http.get('bookdata.json').
+        then(function(response) {
+            $scope.shelves = response.data;
+            console.log($scope.shelves);
+        }, function() {
+            $scope.data = "error";
+            console.log(response.data)
+        });
+    }
+
+    $scope.fetchData();
+})
+.controller('undergradController', function($scope, $http) {
+    $scope.name = "undergrad";
+
+    $scope.fetchData = function() {
+        console.log("Fetching Data...");
+        $http.get('bookdata.json').
+        then(function(response) {
+            $scope.shelves = response.data;
+            console.log($scope.shelves);
+        }, function() {
+            $scope.data = "error";
+            console.log(response.data)
+        });
+    }
+
+    $scope.fetchData();
 });
 

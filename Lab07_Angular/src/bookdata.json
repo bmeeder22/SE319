@@ -1,0 +1,19 @@
+[
+	[
+		{"bookName" : "Ender's Game", "shelf" : "0", "bookType" : "b", "borrowedBy" : "UNoah", "present" : "0"},
+		{"bookName" : "Speaker for the Dead", "shelf" : "0", "bookType" : "b", "borrowedBy" : "UNoah", "present" : "0"},
+		{"bookName" : "Xenocide", "shelf" : "0", "bookType" : "b", "borrowedBy" : "", "present" : "1"}
+	],
+	[
+		{"bookName" : "Sciency Stuff", "shelf" : "1", "bookType" : "r", "borrowedBy" : "UTtom", "present" : "0"},
+		{"bookName" : "Chemistry for Dummies", "shelf" : "1", "bookType" : "b", "borrowedBy" : "", "present" : "1"}
+	],
+	[
+		{"bookName" : "Sports Stuff", "shelf" : "2", "bookType" : "r", "borrowedBy" : "UTtom", "present" : "0"},
+		{"bookName" : "About baseball", "shelf" : "2", "bookType" : "b", "borrowedBy" : "", "present" : "1"}
+	],
+	[
+		{"bookName" : "Art Stuff", "shelf" : "2", "bookType" : "r", "borrowedBy" : "UBilly", "present" : "0"},
+		{"bookName" : "About da Vinci", "shelf" : "2", "bookType" : "b", "borrowedBy" : "", "present" : "1"}
+	]
+]
