@@ -103,7 +103,7 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
                 "bookName" : bookName,
                 "bookType" : isReference,
                 "borrowedBy" : "N/A",
-                "presesnt" : "1"
+                "present" : "1"
             }
 
             var shelfLocation = $scope.shelves[bookShelf].length;
