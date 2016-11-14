@@ -6,14 +6,17 @@ By: Ben Meeder and Noah Eigenfeld
 
 Laravel Documentation: https://laravel.com/docs/5.3
 
-path: cd "/Users/benjaminmeeder/Documents/School/SE 319/portfolio 2/app"
+#Checklist of interesting/complicated parts
+-[ ] Can add an event from the homescreen
+-[ ] Can add an event from the college's page
+-[ ] Can Attend an event
+-[ ] Events are sorted by number of attendees
+-[ ] Today events show up as events that are from current day
+-[ ] Web address works
 
 #Connect to AWS: 
 1. chmod 400 Portfolio2.pem
 2. ssh -i "Portfolio2.pem" ec2-user@ec2-35-162-135-54.us-west-2.compute.amazonaws.com
-
-#setup AWS
-http://www.ybrikman.com/writing/2015/11/11/running-docker-aws-ground-up/
 
 #Kitematic setup
 1. https://kitematic.com/
@@ -49,17 +52,3 @@ http://stackoverflow.com/questions/18878216/docker-how-to-live-sync-host-folder-
 1. terminal session and go to the app directory
 2. php artisan serve
 3. go to http://localhost:8000
-
-#TODO
--[x] Schema php artisan migrate
--[x] College page working
--[x] Hit working
--[x] Add events
--[x] Seed database
--[x] copy to docker container
--[x] upload to AWS
--[x] serve on AWS
--[x] Docker writeup
--[x] Database seed writeup
--[x] Laravel writeup
--[x] Amazon AWS writeup
