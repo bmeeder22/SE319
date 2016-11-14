@@ -128,9 +128,18 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 
     $scope.fetchData = function() {
         console.log("Fetching Data...");
+        $scope.userCheckedOut = 0;
         $http.get('bookdata.json').
         then(function(response) {
             $scope.shelves = response.data;
+            $scope.shelves.forEach(function(shelf) {
+                shelf.forEach(function(book) {
+                    if(book['borrowedBy'] == $scope.user) {
+                        $scope.userCheckedOut += 1;
+                    }
+                })
+            })
+            console.log("User has checked out " + $scope.userCheckedOut + " books.");
         }, function() {
             $scope.data = "error";
         });
@@ -142,7 +151,6 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 
     $scope.saveShelves = function() {
         var jsonShelves = angular.toJson($scope.shelves);
-        console.log("JSON shelves: " + jsonShelves);
         $.post("saveBookData.php",
             {
                 shelves: jsonShelves
@@ -154,10 +162,15 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 
     $scope.checkOutBook = function(book) {
         if (book != null) {
-            console.log("Checking out " + book["bookName"]);
-            book['borrowedBy'] = currentUser;
-            book['present'] = "0";
-            $scope.saveShelves();
+            if ($scope.userCheckedOut < 2) {
+                console.log("Checking out " + book["bookName"]);
+                book['borrowedBy'] = currentUser;
+                book['present'] = "0";
+                $scope.userCheckedOut++;
+                $scope.saveShelves();
+            } else {
+                alert("You cannot check out more than 2 books at a time.");
+            }
         }
     }
 
@@ -166,6 +179,7 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
             console.log("Returning " + book["bookName"]);
             book['borrowedBy'] = "N/A";
             book['present'] = "1";
+            $scope.userCheckedOut--;
             $scope.saveShelves();
         }
     }

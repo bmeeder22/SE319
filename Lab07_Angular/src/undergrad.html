@@ -27,6 +27,6 @@ th {
 	<p>Title: {{selectedBook["bookName"]}}</p>
 	<p>Type: {{selectedBook["bookType"]}}</p>
 	<p>Borrowed by {{selectedBook["borrowedBy"]}}</p>
-	<button ng-if="selectedBook['present'] == '1'" ng-click="checkOutBook(selectedBook)">Check Out</button>
+	<button ng-if="selectedBook['present'] == '1' && selectedBook['bookType'] != 'Reference'" ng-click="checkOutBook(selectedBook)">Check Out</button>
 	<button ng-if="selectedBook['borrowedBy'] == user" ng-click="returnBook(selectedBook)">Return Book</button>
 </div>
