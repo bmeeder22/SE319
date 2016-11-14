@@ -113,6 +113,7 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 
 .controller('undergradController', function($scope, $http, $location) {
     $scope.name = "undergrad";
+    $scope.user = currentUser;
 
     $scope.selectedBook = {
         "bookName" : "No book selected",
@@ -132,7 +133,6 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
             $scope.shelves = response.data;
         }, function() {
             $scope.data = "error";
-            console.log(response.data)
         });
     }
 
@@ -140,8 +140,34 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
         $scope.selectedBook = book;
     }
 
+    $scope.saveShelves = function() {
+        var jsonShelves = angular.toJson($scope.shelves);
+        console.log("JSON shelves: " + jsonShelves);
+        $.post("saveBookData.php",
+            {
+                shelves: jsonShelves
+            },
+            function(data) {
+                console.log(data);
+        });
+    }
+
     $scope.checkOutBook = function(book) {
-        console.log("Checking out " + book["bookName"]);
+        if (book != null) {
+            console.log("Checking out " + book["bookName"]);
+            book['borrowedBy'] = currentUser;
+            book['present'] = "0";
+            $scope.saveShelves();
+        }
+    }
+
+    $scope.returnBook = function(book) {
+        if (book != null) {
+            console.log("Returning " + book["bookName"]);
+            book['borrowedBy'] = "N/A";
+            book['present'] = "1";
+            $scope.saveShelves();
+        }
     }
 
     $scope.fetchData();

@@ -14,7 +14,8 @@ th {
   <td ng-repeat="shelf in shelves">
   	<table>
   		<tr ng-repeat="book in shelf" style="border: 1px solid black">
-  			<td ng-click="getBookDetails(book)" style="border: 1px solid black">{{book["bookName"]}}</td>
+  			<td ng-if="book['present'] == '0'", ng-click="getBookDetails(book)" style="border: 1px solid black; background-color: red">{{book["bookName"]}}</td>
+  			<td ng-if="book['present'] != '0'", ng-click="getBookDetails(book)" style="border: 1px solid black">{{book["bookName"]}}</td>
   		</tr>
   	</table>
   </td> 
