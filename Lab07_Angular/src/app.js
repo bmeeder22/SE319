@@ -44,6 +44,13 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 //----------------------LIBRARIAN-------------------------
 
 .controller('librarianController', function($scope, $http, $location) {
+    $scope.checkLoggedIn = function() {
+        if (currentUser == "") {
+            $location.path("/");
+        }
+    }
+    $scope.checkLoggedIn($location);
+
     $scope.name = "Librarian";
     $scope.username = "admin";
     $scope.selectedBook = {
@@ -112,6 +119,13 @@ angular.module('myApp', ['ngRoute']) //ngRoute is an angular service
 //----------------------UNDERGRAD-------------------------
 
 .controller('undergradController', function($scope, $http, $location) {
+    $scope.checkLoggedIn = function() {
+        if (currentUser == "") {
+            $location.path("/");
+        }
+    }
+    $scope.checkLoggedIn($location);
+
     $scope.name = "undergrad";
     $scope.user = currentUser;
 
