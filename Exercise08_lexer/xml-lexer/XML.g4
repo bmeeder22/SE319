@@ -5,6 +5,7 @@ lexer grammar XML;
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
 fragment NEWLINE: '\n';
+fragment CARRIAGER: '\r';
 fragment DASH: '-';
 fragment SPACE: ' ';
 fragment UNDERSCORE: '_';
@@ -103,7 +104,7 @@ CREDIT_CARD_ELEMENT:
 OTHER_ELEMENT: START_TOKEN OTHER_CONTENTS END_TOKEN
 	{ System.out.println("Custom element found: " + getText()); } ;
 
-DONOTHING: NEWLINE+
+DONOTHING: (NEWLINE | CARRIAGER)+
 	{ skip(); };
 
 //define rules
