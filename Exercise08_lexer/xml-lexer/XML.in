@@ -1,0 +1,29 @@
+<email>n.eigenfeld@iastate.edu</email>
+<email>noah.m.eigenfeld@iastate.edu</email>
+<custom>test01-_~!$&'()*+,;=:</custom>
+<XML>n.eigenfeld@iastate.edu</XML>
+<xmL>n.eigenfeld@iastate.edu</xmL>
+<someting.tag>test01!</something.tag>
+<_something>test01!</_something>
+<date>13/05/2096</date>
+<date>13/05/2017</date>
+<phone>123-456-7890</phone>
+<phone>(123) 456-7890</phone>
+<phone>123 456 7890</phone>
+<phone>123.456.7890</phone>
+<creditcard>4321-1111-2222-3333</creditcard>
+<creditcard>4234567890123</creditcard>
+<special.chars>test0!_~$</special.chars>
+<creditcard>5212-1234-1234-1234</creditcard>
+<creditcard>34123-12345-12345</creditcard>
+<creditcard>301-12345678901</creditcard>
+<creditcard>36-123456789012</creditcard>
+<creditcard>6011-1234-1234-1234</creditcard>
+<creditcard>6512-1234-1234-1234</creditcard>
+<creditcard>2131-1234-1234-123</creditcard>
+<creditcard>1800-1234-1234-123</creditcard>
+<creditcard>3512-1234-1234-1234</creditcard>
+<creditcard>badcard</creditcard>
+<date>12345baddate</date>
+<phone>123badnumber</phone>
+<email>bademail</email>
