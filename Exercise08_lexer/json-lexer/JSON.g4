@@ -1,6 +1,6 @@
-lexer grammar XML;
+lexer grammar JSON;
 
-//define fragments
+//---------------------------FRAGMENT RULES-----------------------------
 
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
@@ -10,11 +10,10 @@ fragment DASH: '-';
 fragment SPACE: ' ';
 fragment UNDERSCORE: '_';
 fragment PERIOD: '.';
+fragment COMMA: ',';
+fragment SEPARATOR: (' '* ':' ' '*);
 fragment SPECIALCHAR: [-_~!$&'()*+,;=:];
 fragment ALT_XML: ('X' | 'x') ('M' | 'm') ('L' | 'l');
-
-fragment START_TOKEN: '<' ELEMENT_NAME '>';
-fragment END_TOKEN: '</' ELEMENT_NAME '>';
 
 fragment DATE_NAME: ('D' | 'd') ('A' | 'a') ('T' | 't') ('E' | 'e');
 fragment EMAIL_NAME: ('E' | 'e') ('M' | 'm') ('A' | 'a') ('I' | 'i') ('L' | 'l');
@@ -64,47 +63,62 @@ fragment OTHER_CONTENTS: (LETTER | DIGIT | SPECIALCHAR | SPACE)*;
 
 //---------------------------ELEMENT RULES-----------------------------
 
+TOKEN_START: '{' SPACE* NEWLINE* {
+	System.out.println("---------------Start Token---------------");
+};
+
+TOKEN_END: SPACE* NEWLINE* '}' SPACE* NEWLINE* {
+	System.out.println("----------------End Token----------------");
+};
+
 BAD_ELEMENT_NAME: '<' ('/')* ALT_XML .*? NEWLINE {
 	System.out.println("Bad Element Name: " + getText() + " - cannot contain 'XML' or a variation of it.");
 };
 
 EMAIL_ELEMENT:
-	('<' EMAIL_NAME '>' EMAIL_CONTENTS '</' EMAIL_NAME '>' {
+	('"' EMAIL_NAME '"' SEPARATOR '"' EMAIL_CONTENTS '"' {
 		System.out.println("Email found: " + getText()); }
-	|'<' EMAIL_NAME '>' .*? '</' EMAIL_NAME '>' {
+	|'"' EMAIL_NAME '"' SEPARATOR '"' .*? '"'{
 		System.out.println("Bad email element format: " + getText());
 	}
 	)
 ;
 
 DATE_ELEMENT: 
-	('<' DATE_NAME '>' DATE_CONTENTS '</' DATE_NAME '>' { System.out.println("Date found: " + getText()); }
-	|'<' DATE_NAME '>' .*? '</' DATE_NAME '>' {
+	('"' DATE_NAME '"' SEPARATOR '"' DATE_CONTENTS '"' {
+		System.out.println("Date found: " + getText()); }
+	|'"' DATE_NAME '"' SEPARATOR '"' .*? '"' {
 		System.out.println("Bad date element format: " + getText());
 	}
 	)
 ;
 
 PHONE_ELEMENT: 
-	('<' PHONE_NAME '>' PHONE_CONTENTS '</' PHONE_NAME '>' { System.out.println("Phone number found: " + getText()); }
-	|'<' PHONE_NAME '>' .*? '</' PHONE_NAME '>' {
+	('"' PHONE_NAME '"' SEPARATOR '"' PHONE_CONTENTS '"' {
+		System.out.println("Phone number found: " + getText()); }
+	|'"' PHONE_NAME '"' SEPARATOR '"' .*? '"' {
 		System.out.println("Bad phone element format: " + getText());
 	}
 	)
 ;
 
 CREDIT_CARD_ELEMENT: 
-	('<' CREDIT_CARD_NAME '>' CREDIT_CARD_CONTENTS '</' CREDIT_CARD_NAME '>' { System.out.println("Credit card found: " + getText()); }
-	|'<' CREDIT_CARD_NAME '>' .*? '</' CREDIT_CARD_NAME '>' {
+	('"' CREDIT_CARD_NAME '"' SEPARATOR '"' CREDIT_CARD_CONTENTS '"' {
+		System.out.println("Credit card found: " + getText()); }
+	|'"' CREDIT_CARD_NAME '"' SEPARATOR '"' .*? '"' {
 		System.out.println("Bad credit card element format: " + getText());
 	}
 	)
 ;
 
-OTHER_ELEMENT: START_TOKEN OTHER_CONTENTS END_TOKEN
-	{ System.out.println("Custom element found: " + getText()); } ;
+OTHER_ELEMENT:
+	('"' ELEMENT_NAME '"' SEPARATOR '"' OTHER_CONTENTS '"' {
+		System.out.println("Custom element found: " + getText()); }
+	| '"' ELEMENT_NAME* '"' SEPARATOR '"' .*? '"' {
+		System.out.println("Bad custom element format: " + getText());
+	}
+	)
+;
 
-DONOTHING: (NEWLINE | CARRIAGER)+
+DONOTHING: (NEWLINE | CARRIAGER | COMMA)+
 	{ skip(); };
-
-//define rules

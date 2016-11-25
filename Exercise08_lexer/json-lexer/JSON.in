@@ -1,0 +1,15 @@
+{"EMAIL" : "n.eigenfeld@iastate.edu"}
+{"PHONE":"123-456-7890"
+"DATE":"20/01/2015"
+"CREDITCARD":"4321-1111-2222-3333"
+"CUSTOM":"test1234-_~!$&'()*+,;=:"
+}
+{
+"EMAIL":"n.eig@iastate.edu"
+"EMAIL":"noah@something.com"
+}
+{
+"EMAIL":"n.eig@iastate.edu"
+{
+"EMAIL" : "n.eigenfeld@iastate.edu"
+}
