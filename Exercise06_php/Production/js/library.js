@@ -272,8 +272,6 @@ class Library {
         //Checkout/Return button
         if (bookInfo['availability'] == '0') { //Not available
             availability = "Checked Out";
-            console.log(bookInfo['username']);
-            console.log(this.username);
 
             if (bookInfo['username'] == this.username) { //if the user is the one who checked out the book, they can return it
                 returnButton = "<button id='returnButton'>Return Book</button>";
@@ -319,7 +317,7 @@ class Library {
         });
 
         this.render();
-        $("#bookInfo").replaceWith('');
+        $("#bookInfo").replaceWith('<div id="bookInfo"></div>');
     }
 
     handleCheckoutClick(bookId) {
@@ -334,7 +332,7 @@ class Library {
         });
 
         this.render();
-        $("#bookInfo").replaceWith('');
+        $("#bookInfo").replaceWith('<div id="bookInfo"></div>');
     }
 
     handleReturnBookClick(bookId) {
@@ -348,6 +346,7 @@ class Library {
         });
 
         this.render();
+        $("#bookInfo").replaceWith('<div id="bookInfo"></div>');
     }
 }
 
@@ -355,6 +354,7 @@ class Shelf {
     constructor(subject, click) {
         this.subject = subject;
         this.click = click;
+        this.books = [];
 
         this.renderLabel();
     }
