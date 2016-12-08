@@ -1,0 +1,6 @@
+checklist.txt
+
+° Look at the Neo4j commands.txt file for the queries we use
+° Look at results.php for the structure of the Graphaware PHP object returned by the query
+° searchbar.js has the cross domain ajax request
+° results.js for the code to implement the display of a JSON array
